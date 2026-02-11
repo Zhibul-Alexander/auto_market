@@ -1,0 +1,100 @@
+'use client';
+
+import Link from 'next/link';
+import styled from 'styled-components';
+import { useTranslations } from 'next-intl';
+import { Card, CardBody, Badge } from './ui';
+import type { Locale } from '../lib/i18n/routing';
+
+const ImgWrap = styled.div`
+  position: relative;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  border-bottom: 1px solid var(--border);
+`;
+
+const ImgTag = styled.img`
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+`;
+
+const ImgOverlay = styled.div`
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.45) 100%);
+  pointer-events: none;
+`;
+
+const Title = styled.div`
+  font-weight: 800;
+  font-size: 16px;
+  line-height: 1.25;
+`;
+
+const Meta = styled.div`
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+`;
+
+const Price = styled.div`
+  margin-top: 12px;
+  font-weight: 900;
+  font-size: 18px;
+`;
+
+export default function LotCard({
+  locale,
+  item
+}: {
+  locale: Locale;
+  item: {
+    slug: string;
+    year: number;
+    make: string;
+    model: string;
+    trim?: string | null;
+    fullModelName?: string | null;
+    thumbUrl?: string | null;
+    bodyType?: string | null;
+    engineVolumeL?: number | null;
+    displayedPrice?: number | null;
+    currency?: string | null;
+  };
+}) {
+  const t = useTranslations();
+
+  const title =
+    item.fullModelName?.trim() ||
+    `${item.year} ${item.make} ${item.model}${item.trim ? ` ${item.trim}` : ''}`.trim();
+
+  const price = item.displayedPrice != null ? `${formatMoney(item.displayedPrice)} ${item.currency || 'USD'}` : t('common.priceOnRequest');
+
+  return (
+    <Link href={`/${locale}/lot/${item.slug}`} aria-label={title}>
+      <Card>
+        <ImgWrap>
+          {item.thumbUrl && <ImgTag src={item.thumbUrl} alt={title} loading="lazy" />}
+          <ImgOverlay />
+        </ImgWrap>
+        <CardBody>
+          <Title>{title}</Title>
+          <Meta>
+            {item.bodyType ? <Badge>{item.bodyType}</Badge> : null}
+            {item.engineVolumeL ? <Badge>{item.engineVolumeL.toFixed(1)}L</Badge> : null}
+          </Meta>
+          <Price>{price}</Price>
+        </CardBody>
+      </Card>
+    </Link>
+  );
+}
+
+function formatMoney(v: number) {
+  return v.toLocaleString(undefined, { maximumFractionDigits: 0 });
+}

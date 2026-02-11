@@ -1,0 +1,126 @@
+{
+  "common": {
+    "brand": "Auto Market",
+    "cta": "Get offer",
+    "send": "Send",
+    "name": "Name",
+    "phone": "Phone",
+    "message": "Message",
+    "consent": "I agree to be contacted regarding my request (privacy policy applies).",
+    "filters": "Filters",
+    "apply": "Apply",
+    "clear": "Clear",
+    "pageSize": "Per page",
+    "priceOnRequest": "Price on request"
+  },
+  "nav": {
+    "catalog": "Catalog",
+    "services": "Services",
+    "tracking": "VIN tracking",
+    "contacts": "Contacts"
+  },
+  "footer": {
+    "tagline": "Clean catalog, transparent price rules, lead forms and VIN tracking.",
+    "links": "Sections",
+    "legal": "Legal",
+    "privacy": "Privacy policy",
+    "cookies": "Cookies",
+    "admin": "Admin"
+  },
+  "home": {
+    "title": "Buy smart. Import confidently.",
+    "subtitle": "Fresh auction lots in a tidy catalog. Filter, compare, leave a request — we’ll help with logistics and paperwork.",
+    "ctaBrowse": "Browse cars",
+    "priceRule": "Price is shown as Buy It Now. If it's missing — we show 50% of Estimated Retail Value. If both are missing — “Price on request”.",
+    "leadTitle": "Request a quote",
+    "freshLots": "Fresh lots",
+    "stepsTitle": "How it works",
+    "steps": "1) Find a lot → 2) Send a request → 3) We confirm costs, timing and docs → 4) Delivery & handover.",
+    "faqTitle": "FAQ",
+    "faq": "Need help choosing a lot or understanding the price? Write us — we’ll reply quickly."
+  },
+  "catalog": {
+    "hubTitle": "Catalog",
+    "open": "Open",
+    "cars": "Cars",
+    "carsDesc": "Sedans, hatchbacks, crossovers, SUVs and more.",
+    "moto": "Motorcycles",
+    "motoDesc": "Bikes and scooters (if available).",
+    "water": "Water transport",
+    "waterDesc": "Boats and watercraft (if available).",
+    "special": "Special equipment",
+    "specialDesc": "Commercial / special machinery (if available).",
+    "carsSub": "Server-side filtering, sorting and pagination. Filters are saved in the URL.",
+    "segmentSub": "Segment: {segment}. You can still add extra filters.",
+    "minimal": "Simple list for this category (filters can be added later).",
+    "hint": "Tip: filters are reflected in the URL, so you can share a ready-made selection."
+  },
+  "lot": {
+    "subtitle": "Lot #{id}",
+    "price": "Price",
+    "specs": {
+      "year": "Year",
+      "body": "Body",
+      "engine": "Engine",
+      "fuel": "Fuel",
+      "drive": "Drive",
+      "transmission": "Transmission",
+      "color": "Color",
+      "vin": "VIN"
+    },
+    "sourceLink": "Open source listing",
+    "similar": "Similar lots",
+    "leadTitle": "I want this lot",
+    "leadHint": "Leave your phone — we’ll contact you and confirm availability and full costs."
+  },
+  "lead": {
+    "placeholders": {
+      "name": "Your name (optional)",
+      "phone": "+995 ...",
+      "message": "What do you need? Budget, city, questions..."
+    },
+    "errors": {
+      "phone": "Enter your phone number",
+      "consent": "Please accept consent to be contacted"
+    },
+    "success": "Thanks! We’ll contact you soon.",
+    "sending": "Sending…"
+  },
+  "services": {
+    "title": "Services",
+    "subtitle": "Everything around the lot: delivery, checks, documents and handover.",
+    "open": "Open service",
+    "openHint": "Details, steps and FAQ",
+    "ctaTitle": "Need this service?",
+    "ctaText": "Leave a request — we’ll уточним сроки, стоимость и список документов.",
+    "leadTitle": "Request this service"
+  },
+  "tracking": {
+    "title": "VIN tracking",
+    "subtitle": "Enter VIN to see logistics checkpoints and status updates (if tracking is available).",
+    "search": "Search",
+    "loading": "Searching…",
+    "notFound": "No tracking events found for this VIN.",
+    "help": "If you need manual check — contact us."
+  },
+  "contacts": {
+    "title": "Contacts",
+    "subtitle": "Send a request and we will respond. You can also ask about a specific lot number.",
+    "leadTitle": "Write to us",
+    "city": "Tbilisi (GE)",
+    "hours": "Daily",
+    "response": "Fast response",
+    "note": "We accept requests in Georgian, Russian and English."
+  },
+  "privacy": {
+    "title": "Privacy policy",
+    "body1": "We collect only the data you submit in forms (name, phone, message) to respond to your request.",
+    "body2": "We don’t sell personal data. Access is limited to people who process requests.",
+    "body3": "You can ask to delete your request data by contacting us."
+  },
+  "cookies": {
+    "title": "Cookies",
+    "body1": "We use essential cookies for the site and admin authentication.",
+    "body2": "You can disable cookies in your browser settings, but some features may stop working."
+  }
+}
