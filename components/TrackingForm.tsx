@@ -15,7 +15,7 @@ const Item = styled.div`
   border: 1px solid var(--border);
   border-radius: 14px;
   padding: 12px;
-  background: rgba(255,255,255,0.02);
+  background: #F8FAFC;
 `;
 
 export default function TrackingForm({ locale }: { locale: string }) {
@@ -59,7 +59,7 @@ export default function TrackingForm({ locale }: { locale: string }) {
           <Button $variant="primary" disabled={loading}>{loading ? t('tracking.loading') : t('tracking.search')}</Button>
         </form>
 
-        {error ? <P style={{ marginTop: 12, color: '#ffb4a2' }}>{error}</P> : null}
+        {error ? <P style={{ marginTop: 12, color: '#DC2626' }}>{error}</P> : null}
 
         {events && events.length ? (
           <>

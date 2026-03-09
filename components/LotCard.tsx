@@ -11,7 +11,7 @@ const ImgWrap = styled.div`
   width: 100%;
   aspect-ratio: 16 / 10;
   overflow: hidden;
-  background: linear-gradient(135deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+  background: #F1F5F9;
   border-bottom: 1px solid var(--border);
 `;
 
@@ -44,8 +44,9 @@ const Meta = styled.div`
 
 const Price = styled.div`
   margin-top: 12px;
-  font-weight: 900;
+  font-weight: 700;
   font-size: 18px;
+  color: #FF6B35;
 `;
 
 export default function LotCard({

@@ -30,7 +30,7 @@ const Check = styled.label`
 `;
 
 const Error = styled.div`
-  color: #ffb4a2;
+  color: #DC2626;
   font-size: 13px;
 `;
 
@@ -135,7 +135,7 @@ export default function LeadForm(props: {
           <div style={{ height: 12 }} />
 
           {error ? <Error>{error}</Error> : null}
-          {ok ? <P style={{ color: '#8be28b' }}>{t('lead.success')}</P> : null}
+          {ok ? <P style={{ color: '#16A34A' }}>{t('lead.success')}</P> : null}
 
           <div style={{ height: 12 }} />
           <Button $variant="primary" disabled={loading}>

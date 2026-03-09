@@ -4,6 +4,7 @@ import { useSearchParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { Button, Card, CardBody, Input, H2, P, Container } from '../../../components/ui';
+import { useAdminI18n } from '../../../lib/admin-i18n';
 
 const Center = styled.div`
   min-height: 100vh;
@@ -12,6 +13,7 @@ const Center = styled.div`
 `;
 
 export default function AdminLoginPage() {
+  const { t } = useAdminI18n();
   const sp = useSearchParams();
   const router = useRouter();
   const next = sp?.get('next') || '/admin/import';
@@ -45,16 +47,16 @@ export default function AdminLoginPage() {
       <Container style={{ maxWidth: 520 }}>
         <Card>
           <CardBody>
-            <H2>Admin Login</H2>
-            <P style={{ marginTop: 8 }}>Use the password from ENV (ADMIN_PASSWORD).</P>
+            <H2>{t('login.title')}</H2>
+            <P style={{ marginTop: 8 }}>{t('login.hint')}</P>
             <div style={{ height: 14 }} />
             <form onSubmit={submit}>
-              <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder="Password" />
+              <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} placeholder={t('login.placeholder')} />
               <div style={{ height: 12 }} />
-              {error ? <P style={{ color: '#ffb4a2' }}>{error}</P> : null}
+              {error ? <P style={{ color: '#DC2626' }}>{error}</P> : null}
               <div style={{ height: 12 }} />
               <Button $variant="primary" disabled={loading} style={{ width: '100%' }}>
-                {loading ? 'Signing in…' : 'Sign in'}
+                {loading ? t('login.loading') : t('login.submit')}
               </Button>
             </form>
           </CardBody>

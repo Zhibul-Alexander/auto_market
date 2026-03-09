@@ -9,7 +9,7 @@ import type { Locale } from '../lib/i18n/routing';
 const Wrap = styled.footer`
   border-top: 1px solid var(--border);
   padding: 28px 0 40px;
-  background: rgba(255,255,255,0.02);
+  background: #FFFFFF;
 `;
 
 const Row = styled.div`
@@ -58,13 +58,14 @@ const SocialRow = styled.div`
     height: 36px;
     border-radius: 10px;
     border: 1px solid var(--border);
-    background: rgba(255,255,255,0.03);
+    background: var(--hover-bg);
     color: var(--muted);
-    transition: color 120ms, border-color 120ms;
+    transition: color 120ms, border-color 120ms, background 120ms;
   }
   a:hover {
     color: var(--text);
-    border-color: rgba(255,107,53,0.55);
+    border-color: #FF6B35;
+    background: rgba(255,107,53,0.08);
   }
 `;
 
@@ -139,7 +140,6 @@ export default function Footer({ locale }: { locale: Locale }) {
             <Links>
               <Link href={`/${locale}/privacy`}>{t('footer.privacy')}</Link>
               <Link href={`/${locale}/cookies`}>{t('footer.cookies')}</Link>
-              <Link href={`/admin/login`}>{t('footer.admin')}</Link>
             </Links>
           </div>
         </Row>

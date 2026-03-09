@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Button, Card, CardBody, H2, P, Hr } from '../../../components/ui';
+import { useAdminI18n } from '../../../lib/admin-i18n';
 
 type PreviewRes =
   | { ok: false; error: string }
@@ -12,6 +13,7 @@ type ImportRes =
   | { ok: true; mode: 'import'; total: number; processed: number; inserted: number; updated: number; failed: number; errors: any[] };
 
 export default function AdminImportPage() {
+  const { t } = useAdminI18n();
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<PreviewRes | null>(null);
   const [report, setReport] = useState<ImportRes | null>(null);
@@ -60,8 +62,8 @@ export default function AdminImportPage() {
 
   return (
     <div>
-      <H2>Import JSON</H2>
-      <P style={{ marginTop: 8 }}>Upload a .json file (array of lot objects). Server will validate, normalize and upsert by lot_number.</P>
+      <H2>{t('import.title')}</H2>
+      <P style={{ marginTop: 8 }}>{t('import.desc')}</P>
       <div style={{ height: 12 }} />
 
       <Card>
@@ -69,11 +71,11 @@ export default function AdminImportPage() {
           <input type="file" accept=".json,application/json" onChange={(e) => setFile(e.target.files?.[0] || null)} />
           <div style={{ height: 12 }} />
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-            <Button $variant="primary" disabled={!file || loading} onClick={doPreview}>Preview</Button>
-            <Button disabled={!file || loading} onClick={doImport}>Import</Button>
+            <Button $variant="primary" disabled={!file || loading} onClick={doPreview}>{t('import.preview')}</Button>
+            <Button disabled={!file || loading} onClick={doImport}>{t('import.import')}</Button>
           </div>
           <P style={{ marginTop: 10, fontSize: 13, color: 'var(--muted)' }}>
-            Tip: displayedPrice is computed and stored for filtering (Buy It Now → else 0.5 × Est. Retail → else “Price on request”).
+            {t('import.tip')}
           </P>
         </CardBody>
       </Card>
@@ -83,10 +85,10 @@ export default function AdminImportPage() {
           <div style={{ height: 18 }} />
           <Card>
             <CardBody>
-              <H2 style={{ fontSize: 18 }}>Preview</H2>
+              <H2 style={{ fontSize: 18 }}>{t('import.previewTitle')}</H2>
               {'ok' in preview && preview.ok ? (
                 <>
-                  <P style={{ marginTop: 8 }}>Total objects: {preview.total}. Showing first {preview.preview.length} normalized rows.</P>
+                  <P style={{ marginTop: 8 }}>{t('import.total')}: {preview.total}. {t('import.showing').replace('{n}', String(preview.preview.length))}</P>
                   <Hr />
                   <pre style={{ whiteSpace: 'pre-wrap', fontSize: 12, color: 'var(--muted)' }}>
                     {JSON.stringify(preview.preview, null, 2)}
@@ -94,13 +96,13 @@ export default function AdminImportPage() {
                   {preview.errors?.length ? (
                     <>
                       <Hr />
-                      <P style={{ color: '#ffb4a2' }}>Validation errors: {preview.errors.length}</P>
-                      <Button onClick={() => downloadErrors(preview.errors)}>Download errors</Button>
+                      <P style={{ color: '#DC2626' }}>{t('import.validationErrors')}: {preview.errors.length}</P>
+                      <Button onClick={() => downloadErrors(preview.errors)}>{t('import.downloadErrors')}</Button>
                     </>
                   ) : null}
                 </>
               ) : (
-                <P style={{ color: '#ffb4a2' }}>{(preview as any).error || 'Preview failed'}</P>
+                <P style={{ color: '#DC2626' }}>{(preview as any).error || t('import.previewFailed')}</P>
               )}
             </CardBody>
           </Card>
@@ -112,24 +114,24 @@ export default function AdminImportPage() {
           <div style={{ height: 18 }} />
           <Card>
             <CardBody>
-              <H2 style={{ fontSize: 18 }}>Import report</H2>
+              <H2 style={{ fontSize: 18 }}>{t('import.reportTitle')}</H2>
               {'ok' in report && report.ok ? (
                 <>
                   <P style={{ marginTop: 8 }}>
-                    processed: {report.processed} · inserted/processed: {report.inserted} · failed: {report.failed}
+                    {t('import.processed')}: {report.processed} · {t('import.inserted')}: {report.inserted} · {t('import.failed')}: {report.failed}
                   </P>
                   {report.errors?.length ? (
                     <>
                       <Hr />
-                      <P style={{ color: '#ffb4a2' }}>Errors: {report.errors.length}</P>
-                      <Button onClick={() => downloadErrors(report.errors)}>Download errors</Button>
+                      <P style={{ color: '#DC2626' }}>{t('import.errors')}: {report.errors.length}</P>
+                      <Button onClick={() => downloadErrors(report.errors)}>{t('import.downloadErrors')}</Button>
                     </>
                   ) : (
-                    <P style={{ color: '#8be28b' }}>Done.</P>
+                    <P style={{ color: '#16A34A' }}>{t('import.done')}</P>
                   )}
                 </>
               ) : (
-                <P style={{ color: '#ffb4a2' }}>{(report as any).error || 'Import failed'}</P>
+                <P style={{ color: '#DC2626' }}>{(report as any).error || t('import.importFailed')}</P>
               )}
             </CardBody>
           </Card>

@@ -46,7 +46,7 @@ export default async function CustomsPage({ params }: { params: { locale: Locale
             <CardBody style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
               <div style={{
                 width: 36, height: 36, borderRadius: '50%', background: 'var(--accent)',
-                color: '#120700', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontWeight: 900, flexShrink: 0
               }}>
                 {i + 1}
@@ -67,7 +67,7 @@ export default async function CustomsPage({ params }: { params: { locale: Locale
           <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
             {costs.map((c, i) => (
               <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <Badge style={{ background: 'var(--accent)', color: '#120700', fontWeight: 800, flexShrink: 0 }}>₾</Badge>
+                <Badge style={{ background: 'var(--accent)', color: '#FFFFFF', fontWeight: 800, flexShrink: 0 }}>₾</Badge>
                 <P style={{ color: 'var(--text)' }}>{c}</P>
               </div>
             ))}
@@ -119,7 +119,7 @@ export default async function CustomsPage({ params }: { params: { locale: Locale
           <div key={i} style={{ gridColumn: 'span 6' }}>
             <Card>
               <CardBody style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <Badge style={{ background: 'var(--accent)', color: '#120700', fontWeight: 800 }}>✓</Badge>
+                <Badge style={{ background: 'var(--accent)', color: '#FFFFFF', fontWeight: 800 }}>✓</Badge>
                 <P style={{ color: 'var(--text)' }}>{b}</P>
               </CardBody>
             </Card>

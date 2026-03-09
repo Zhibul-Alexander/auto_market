@@ -62,7 +62,7 @@ export default async function AboutPage({ params }: { params: { locale: Locale }
           <div key={i} style={{ gridColumn: 'span 6' }}>
             <Card>
               <CardBody style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                <Badge style={{ flexShrink: 0, background: 'var(--accent)', color: '#120700', fontWeight: 800 }}>
+                <Badge style={{ flexShrink: 0, background: 'var(--accent)', color: '#FFFFFF', fontWeight: 800 }}>
                   {i + 1}
                 </Badge>
                 <P style={{ color: 'var(--text)' }}>{item}</P>
@@ -81,7 +81,7 @@ export default async function AboutPage({ params }: { params: { locale: Locale }
             <CardBody style={{ display: 'flex', alignItems: 'flex-start', gap: 16 }}>
               <div style={{
                 width: 40, height: 40, borderRadius: '50%', background: 'var(--accent)',
-                color: '#120700', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 fontWeight: 900, fontSize: 18, flexShrink: 0
               }}>
                 {i + 1}

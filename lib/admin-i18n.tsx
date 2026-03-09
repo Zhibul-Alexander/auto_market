@@ -1,0 +1,257 @@
+'use client';
+
+import { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+
+export type AdminLocale = 'ge' | 'ru' | 'en';
+
+const STORAGE_KEY = 'admin_locale';
+
+type Dict = Record<string, string>;
+
+const dict: Record<AdminLocale, Dict> = {
+  en: {
+    'nav.import': 'Import',
+    'nav.leads': 'Leads',
+    'nav.offices': 'Offices',
+    'nav.backToSite': 'Back to site',
+    'login.title': 'Admin Login',
+    'login.hint': 'Use the password from ENV (ADMIN_PASSWORD).',
+    'login.placeholder': 'Password',
+    'login.submit': 'Sign in',
+    'login.loading': 'Signing in…',
+    'import.title': 'Import JSON',
+    'import.desc': 'Upload a .json file (array of lot objects). Server will validate, normalize and upsert by lot_number.',
+    'import.preview': 'Preview',
+    'import.import': 'Import',
+    'import.tip': 'Tip: displayedPrice is computed and stored for filtering (Buy It Now → else 0.5 × Est. Retail → else "Price on request").',
+    'import.previewTitle': 'Preview',
+    'import.total': 'Total objects',
+    'import.showing': 'Showing first {n} normalized rows.',
+    'import.validationErrors': 'Validation errors',
+    'import.downloadErrors': 'Download errors',
+    'import.previewFailed': 'Preview failed',
+    'import.reportTitle': 'Import report',
+    'import.processed': 'processed',
+    'import.inserted': 'inserted/processed',
+    'import.failed': 'failed',
+    'import.errors': 'Errors',
+    'import.done': 'Done.',
+    'import.importFailed': 'Import failed',
+    'leads.title': 'Leads',
+    'leads.desc': 'Manage incoming leads: status, notes, delete.',
+    'leads.all': 'All',
+    'leads.new': 'New',
+    'leads.inProgress': 'In progress',
+    'leads.done': 'Done',
+    'leads.searchPlaceholder': 'Search by phone/name',
+    'leads.refresh': 'Refresh',
+    'leads.loading': 'Loading…',
+    'leads.list': 'List',
+    'leads.details': 'Details',
+    'leads.phone': 'Phone',
+    'leads.name': 'Name',
+    'leads.status': 'Status',
+    'leads.page': 'Page',
+    'leads.delete': 'Delete',
+    'leads.confirmDelete': 'Delete lead?',
+    'leads.notePlaceholder': 'Internal note',
+    'leads.saveNote': 'Save note',
+    'leads.saved': 'Saved.',
+    'leads.noLeads': 'No leads yet.',
+    'leads.selectLead': 'Select a lead from the list.',
+    'offices.title': 'Offices',
+    'offices.desc': 'Manage office locations displayed on the contacts page.',
+    'offices.addTitle': 'Add new office',
+    'offices.city': 'City',
+    'offices.phone': 'Phone',
+    'offices.address': 'Address',
+    'offices.optional': 'Optional',
+    'offices.sortOrder': 'Sort order',
+    'offices.add': 'Add',
+    'offices.save': 'Save',
+    'offices.cancel': 'Cancel',
+    'offices.edit': 'Edit',
+    'offices.del': 'Del',
+    'offices.added': 'Added',
+    'offices.saved': 'Saved',
+    'offices.confirmDelete': 'Delete office?',
+    'offices.noOffices': 'No offices yet.',
+    'offices.cityPhoneRequired': 'City and phone required',
+  },
+  ru: {
+    'nav.import': 'Импорт',
+    'nav.leads': 'Заявки',
+    'nav.offices': 'Офисы',
+    'nav.backToSite': 'На сайт',
+    'login.title': 'Вход в админку',
+    'login.hint': 'Используйте пароль из ENV (ADMIN_PASSWORD).',
+    'login.placeholder': 'Пароль',
+    'login.submit': 'Войти',
+    'login.loading': 'Вход…',
+    'import.title': 'Импорт JSON',
+    'import.desc': 'Загрузите .json файл (массив объектов лотов). Сервер проверит, нормализует и выполнит upsert по lot_number.',
+    'import.preview': 'Предпросмотр',
+    'import.import': 'Импорт',
+    'import.tip': 'Подсказка: displayedPrice вычисляется и сохраняется для фильтрации (Buy It Now → иначе 0.5 × Est. Retail → иначе «Цена по запросу»).',
+    'import.previewTitle': 'Предпросмотр',
+    'import.total': 'Всего объектов',
+    'import.showing': 'Показаны первые {n} нормализованных строк.',
+    'import.validationErrors': 'Ошибки валидации',
+    'import.downloadErrors': 'Скачать ошибки',
+    'import.previewFailed': 'Предпросмотр не удался',
+    'import.reportTitle': 'Отчёт импорта',
+    'import.processed': 'обработано',
+    'import.inserted': 'вставлено',
+    'import.failed': 'ошибок',
+    'import.errors': 'Ошибки',
+    'import.done': 'Готово.',
+    'import.importFailed': 'Импорт не удался',
+    'leads.title': 'Заявки',
+    'leads.desc': 'Управление входящими заявками: статус, заметки, удаление.',
+    'leads.all': 'Все',
+    'leads.new': 'Новые',
+    'leads.inProgress': 'В работе',
+    'leads.done': 'Готово',
+    'leads.searchPlaceholder': 'Поиск по телефону/имени',
+    'leads.refresh': 'Обновить',
+    'leads.loading': 'Загрузка…',
+    'leads.list': 'Список',
+    'leads.details': 'Детали',
+    'leads.phone': 'Телефон',
+    'leads.name': 'Имя',
+    'leads.status': 'Статус',
+    'leads.page': 'Страница',
+    'leads.delete': 'Удалить',
+    'leads.confirmDelete': 'Удалить заявку?',
+    'leads.notePlaceholder': 'Внутренняя заметка',
+    'leads.saveNote': 'Сохранить заметку',
+    'leads.saved': 'Сохранено.',
+    'leads.noLeads': 'Заявок пока нет.',
+    'leads.selectLead': 'Выберите заявку из списка.',
+    'offices.title': 'Офисы',
+    'offices.desc': 'Управление адресами офисов, отображаемых на странице контактов.',
+    'offices.addTitle': 'Добавить офис',
+    'offices.city': 'Город',
+    'offices.phone': 'Телефон',
+    'offices.address': 'Адрес',
+    'offices.optional': 'Необязательно',
+    'offices.sortOrder': 'Порядок',
+    'offices.add': 'Добавить',
+    'offices.save': 'Сохранить',
+    'offices.cancel': 'Отмена',
+    'offices.edit': 'Изменить',
+    'offices.del': 'Удалить',
+    'offices.added': 'Добавлено',
+    'offices.saved': 'Сохранено',
+    'offices.confirmDelete': 'Удалить офис?',
+    'offices.noOffices': 'Офисов пока нет.',
+    'offices.cityPhoneRequired': 'Город и телефон обязательны',
+  },
+  ge: {
+    'nav.import': 'იმპორტი',
+    'nav.leads': 'მოთხოვნები',
+    'nav.offices': 'ოფისები',
+    'nav.backToSite': 'საიტზე',
+    'login.title': 'ადმინის შესვლა',
+    'login.hint': 'გამოიყენეთ პაროლი ENV-დან (ADMIN_PASSWORD).',
+    'login.placeholder': 'პაროლი',
+    'login.submit': 'შესვლა',
+    'login.loading': 'შესვლა…',
+    'import.title': 'JSON იმპორტი',
+    'import.desc': 'ატვირთეთ .json ფაილი (ლოტების მასივი). სერვერი შეამოწმებს, ნორმალიზებს და upsert-ს lot_number-ით.',
+    'import.preview': 'წინასწარი ნახვა',
+    'import.import': 'იმპორტი',
+    'import.tip': 'რჩევა: displayedPrice გამოითვლება და ინახება ფილტრაციისთვის (Buy It Now → 0.5 × Est. Retail → «ფასი მოთხოვნით»).',
+    'import.previewTitle': 'წინასწარი ნახვა',
+    'import.total': 'სულ ობიექტები',
+    'import.showing': 'ნაჩვენებია პირველი {n} ნორმალიზებული სტრიქონი.',
+    'import.validationErrors': 'ვალიდაციის შეცდომები',
+    'import.downloadErrors': 'შეცდომების ჩამოტვირთვა',
+    'import.previewFailed': 'წინასწარი ნახვა ვერ მოხერხდა',
+    'import.reportTitle': 'იმპორტის ანგარიში',
+    'import.processed': 'დამუშავებული',
+    'import.inserted': 'ჩასმული',
+    'import.failed': 'წარუმატებელი',
+    'import.errors': 'შეცდომები',
+    'import.done': 'დასრულებულია.',
+    'import.importFailed': 'იმპორტი ვერ მოხერხდა',
+    'leads.title': 'მოთხოვნები',
+    'leads.desc': 'შემოსული მოთხოვნების მართვა: სტატუსი, შენიშვნები, წაშლა.',
+    'leads.all': 'ყველა',
+    'leads.new': 'ახალი',
+    'leads.inProgress': 'მუშავდება',
+    'leads.done': 'დასრულებული',
+    'leads.searchPlaceholder': 'ძებნა ტელეფონით/სახელით',
+    'leads.refresh': 'განახლება',
+    'leads.loading': 'იტვირთება…',
+    'leads.list': 'სია',
+    'leads.details': 'დეტალები',
+    'leads.phone': 'ტელეფონი',
+    'leads.name': 'სახელი',
+    'leads.status': 'სტატუსი',
+    'leads.page': 'გვერდი',
+    'leads.delete': 'წაშლა',
+    'leads.confirmDelete': 'წავშალოთ მოთხოვნა?',
+    'leads.notePlaceholder': 'შიდა შენიშვნა',
+    'leads.saveNote': 'შენიშვნის შენახვა',
+    'leads.saved': 'შენახულია.',
+    'leads.noLeads': 'მოთხოვნები ჯერ არ არის.',
+    'leads.selectLead': 'აირჩიეთ მოთხოვნა სიიდან.',
+    'offices.title': 'ოფისები',
+    'offices.desc': 'კონტაქტების გვერდზე ნაჩვენები ოფისების მართვა.',
+    'offices.addTitle': 'ოფისის დამატება',
+    'offices.city': 'ქალაქი',
+    'offices.phone': 'ტელეფონი',
+    'offices.address': 'მისამართი',
+    'offices.optional': 'არასავალდებულო',
+    'offices.sortOrder': 'რიგი',
+    'offices.add': 'დამატება',
+    'offices.save': 'შენახვა',
+    'offices.cancel': 'გაუქმება',
+    'offices.edit': 'რედაქტირება',
+    'offices.del': 'წაშლა',
+    'offices.added': 'დამატებულია',
+    'offices.saved': 'შენახულია',
+    'offices.confirmDelete': 'წავშალოთ ოფისი?',
+    'offices.noOffices': 'ოფისები ჯერ არ არის.',
+    'offices.cityPhoneRequired': 'ქალაქი და ტელეფონი სავალდებულოა',
+  },
+};
+
+type AdminI18nCtx = {
+  locale: AdminLocale;
+  setLocale: (l: AdminLocale) => void;
+  t: (key: string) => string;
+};
+
+const Ctx = createContext<AdminI18nCtx>({
+  locale: 'en',
+  setLocale: () => {},
+  t: (k) => k,
+});
+
+export function AdminI18nProvider({ children }: { children: ReactNode }) {
+  const [locale, setLocaleState] = useState<AdminLocale>('en');
+
+  useEffect(() => {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved && (saved === 'ge' || saved === 'ru' || saved === 'en')) {
+      setLocaleState(saved);
+    }
+  }, []);
+
+  function setLocale(l: AdminLocale) {
+    setLocaleState(l);
+    localStorage.setItem(STORAGE_KEY, l);
+  }
+
+  function t(key: string): string {
+    return dict[locale][key] ?? key;
+  }
+
+  return <Ctx.Provider value={{ locale, setLocale, t }}>{children}</Ctx.Provider>;
+}
+
+export function useAdminI18n() {
+  return useContext(Ctx);
+}

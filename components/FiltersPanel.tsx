@@ -10,11 +10,12 @@ import { useTranslations } from 'next-intl';
 
 const Wrap = styled.div`
   border: 1px solid var(--border);
-  background: rgba(255,255,255,0.02);
+  background: #FFFFFF;
   border-radius: 16px;
   overflow: hidden;
   position: sticky;
   top: 84px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
 
   @media (max-width: 980px) {
     position: static;
@@ -44,7 +45,7 @@ const ActiveCount = styled.span`
   padding: 0 6px;
   border-radius: 999px;
   background: var(--accent);
-  color: #120700;
+  color: #FFFFFF;
   font-size: 11px;
   font-weight: 800;
 `;
@@ -88,9 +89,9 @@ const Chips = styled.div`
 const Chip = styled.button<{ $active?: boolean }>`
   padding: 7px 10px;
   border-radius: 999px;
-  border: 1px solid ${(p) => (p.$active ? 'rgba(255,107,53,0.65)' : 'var(--border)')};
-  background: ${(p) => (p.$active ? 'rgba(255,107,53,0.15)' : 'rgba(255,255,255,0.02)')};
-  color: ${(p) => (p.$active ? 'var(--text)' : 'var(--muted)')};
+  border: 1px solid ${(p) => (p.$active ? '#FF6B35' : 'var(--border)')};
+  background: ${(p) => (p.$active ? 'rgba(255,107,53,0.1)' : '#F8FAFC')};
+  color: ${(p) => (p.$active ? '#FF6B35' : 'var(--muted)')};
   cursor: pointer;
   font-size: 12px;
   font-weight: ${(p) => (p.$active ? 600 : 400)};
@@ -99,13 +100,13 @@ const Chip = styled.button<{ $active?: boolean }>`
 
 const Select = styled.select`
   width: 100%;
-  background: var(--surface2);
+  background: #F8FAFC;
   border: 1px solid var(--border);
   border-radius: 12px;
   padding: 10px 12px;
   color: var(--text);
   outline: none;
-  &:focus { border-color: rgba(255,107,53,0.7); }
+  &:focus { border-color: #FF6B35; box-shadow: 0 0 0 3px rgba(255,107,53,0.15); }
 `;
 
 const Footer = styled.div`

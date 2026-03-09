@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { Button, Card, CardBody, H2, Input, P, Hr } from '../../../components/ui';
+import { useAdminI18n } from '../../../lib/admin-i18n';
 
 type Office = {
   id: number;
@@ -12,6 +13,7 @@ type Office = {
 };
 
 export default function AdminOfficesPage() {
+  const { t } = useAdminI18n();
   const [items, setItems] = useState<Office[]>([]);
   const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
@@ -41,7 +43,7 @@ export default function AdminOfficesPage() {
   useEffect(() => { load(); }, []);
 
   async function add() {
-    if (!city.trim() || !phone.trim()) { setMsg('City and phone required'); return; }
+    if (!city.trim() || !phone.trim()) { setMsg(t('offices.cityPhoneRequired')); return; }
     setMsg(null);
     const res = await fetch('/api/admin/offices', {
       method: 'POST',
@@ -50,7 +52,7 @@ export default function AdminOfficesPage() {
     });
     if (res.ok) {
       setCity(''); setPhone(''); setAddress(''); setSortOrder('0');
-      setMsg('Added');
+      setMsg(t('offices.added'));
       load();
     } else {
       const d = await res.json().catch(() => ({}));
@@ -68,7 +70,7 @@ export default function AdminOfficesPage() {
     });
     if (res.ok) {
       setEditId(null);
-      setMsg('Saved');
+      setMsg(t('offices.saved'));
       load();
     } else {
       const d = await res.json().catch(() => ({}));
@@ -77,7 +79,7 @@ export default function AdminOfficesPage() {
   }
 
   async function remove(id: number) {
-    if (!confirm('Delete office?')) return;
+    if (!confirm(t('offices.confirmDelete'))) return;
     const res = await fetch(`/api/admin/offices/${id}`, { method: 'DELETE' });
     if (res.ok) {
       setItems((prev) => prev.filter((o) => o.id !== id));
@@ -95,33 +97,33 @@ export default function AdminOfficesPage() {
 
   return (
     <div>
-      <H2>Offices</H2>
-      <P style={{ marginTop: 8 }}>Manage office locations displayed on the contacts page.</P>
+      <H2>{t('offices.title')}</H2>
+      <P style={{ marginTop: 8 }}>{t('offices.desc')}</P>
       <div style={{ height: 14 }} />
 
       <Card>
         <CardBody>
-          <div style={{ fontWeight: 900, marginBottom: 10 }}>Add new office</div>
+          <div style={{ fontWeight: 900, marginBottom: 10 }}>{t('offices.addTitle')}</div>
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr auto', gap: 10, alignItems: 'end' }}>
             <div>
-              <label style={{ fontSize: 12, color: 'var(--muted)' }}>City</label>
+              <label style={{ fontSize: 12, color: 'var(--muted)' }}>{t('offices.city')}</label>
               <Input value={city} onChange={(e) => setCity(e.target.value)} placeholder="Tbilisi" />
             </div>
             <div>
-              <label style={{ fontSize: 12, color: 'var(--muted)' }}>Phone</label>
+              <label style={{ fontSize: 12, color: 'var(--muted)' }}>{t('offices.phone')}</label>
               <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+995 ..." />
             </div>
             <div>
-              <label style={{ fontSize: 12, color: 'var(--muted)' }}>Address</label>
-              <Input value={address} onChange={(e) => setAddress(e.target.value)} placeholder="Optional" />
+              <label style={{ fontSize: 12, color: 'var(--muted)' }}>{t('offices.address')}</label>
+              <Input value={address} onChange={(e) => setAddress(e.target.value)} placeholder={t('offices.optional')} />
             </div>
-            <Button $variant="primary" onClick={add}>Add</Button>
+            <Button $variant="primary" onClick={add}>{t('offices.add')}</Button>
           </div>
           <div style={{ marginTop: 6 }}>
-            <label style={{ fontSize: 12, color: 'var(--muted)' }}>Sort order</label>
+            <label style={{ fontSize: 12, color: 'var(--muted)' }}>{t('offices.sortOrder')}</label>
             <Input value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} style={{ width: 80 }} />
           </div>
-          {msg ? <P style={{ marginTop: 10, color: msg === 'Added' || msg === 'Saved' ? '#8be28b' : '#ffb4a2' }}>{msg}</P> : null}
+          {msg ? <P style={{ marginTop: 10, color: msg === t('offices.added') || msg === t('offices.saved') ? '#16A34A' : '#DC2626' }}>{msg}</P> : null}
         </CardBody>
       </Card>
 
@@ -130,7 +132,7 @@ export default function AdminOfficesPage() {
       <Card>
         <CardBody>
           <div style={{ fontWeight: 900, marginBottom: 10 }}>
-            Offices ({items.length}) {loading && '...'}
+            {t('offices.title')} ({items.length}) {loading && '...'}
           </div>
           {items.map((o) => (
             <div key={o.id}>
@@ -143,29 +145,29 @@ export default function AdminOfficesPage() {
                     <Input value={editSort} onChange={(e) => setEditSort(e.target.value)} />
                   </div>
                   <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
-                    <Button $variant="primary" onClick={save}>Save</Button>
-                    <Button onClick={() => setEditId(null)}>Cancel</Button>
+                    <Button $variant="primary" onClick={save}>{t('offices.save')}</Button>
+                    <Button onClick={() => setEditId(null)}>{t('offices.cancel')}</Button>
                   </div>
                 </div>
               ) : (
                 <div style={{
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',
                   padding: 12, borderRadius: 14, border: '1px solid var(--border)',
-                  marginBottom: 10, background: 'rgba(255,255,255,0.02)'
+                  marginBottom: 10, background: '#F8FAFC'
                 }}>
                   <div>
                     <div style={{ fontWeight: 900 }}>{o.city}</div>
                     <div style={{ color: 'var(--muted)', fontSize: 13 }}>{o.phone}{o.address ? ` · ${o.address}` : ''}</div>
                   </div>
                   <div style={{ display: 'flex', gap: 8 }}>
-                    <Button onClick={() => startEdit(o)}>Edit</Button>
-                    <Button onClick={() => remove(o.id)} style={{ borderColor: 'rgba(255,180,162,0.45)' }}>Del</Button>
+                    <Button onClick={() => startEdit(o)}>{t('offices.edit')}</Button>
+                    <Button onClick={() => remove(o.id)} style={{ borderColor: '#FCA5A5', color: '#DC2626' }}>{t('offices.del')}</Button>
                   </div>
                 </div>
               )}
             </div>
           ))}
-          {!items.length && !loading ? <P style={{ color: 'var(--muted)' }}>No offices yet.</P> : null}
+          {!items.length && !loading ? <P style={{ color: 'var(--muted)' }}>{t('offices.noOffices')}</P> : null}
         </CardBody>
       </Card>
     </div>

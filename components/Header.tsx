@@ -12,7 +12,7 @@ const Wrap = styled.header`
   top: 0;
   z-index: 50;
   backdrop-filter: blur(10px);
-  background: rgba(11, 13, 16, 0.72);
+  background: rgba(255, 255, 255, 0.8);
   border-bottom: 1px solid var(--border);
 `;
 
@@ -50,12 +50,13 @@ const Nav = styled.nav`
     padding: 8px 10px;
     border-radius: 10px;
     border: 1px solid transparent;
+    transition: color 120ms ease, background 120ms ease, border-color 120ms ease;
   }
 
   a:hover {
     color: var(--text);
     border-color: var(--border);
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--hover-bg);
   }
 
   @media (max-width: 860px) {
@@ -75,7 +76,7 @@ const Lang = styled.div`
   padding: 4px;
   border: 1px solid var(--border);
   border-radius: 999px;
-  background: rgba(255,255,255,0.03);
+  background: #F8FAFC;
 `;
 
 const LangLink = styled(Link)<{ $active?: boolean }>`
@@ -83,8 +84,9 @@ const LangLink = styled(Link)<{ $active?: boolean }>`
   border-radius: 999px;
   font-size: 12px;
   font-weight: 700;
-  color: ${(p) => (p.$active ? '#120700' : 'var(--muted)')};
+  color: ${(p) => (p.$active ? '#FFFFFF' : 'var(--muted)')};
   background: ${(p) => (p.$active ? 'var(--accent)' : 'transparent')};
+  transition: color 120ms ease, background 120ms ease;
 `;
 
 function replaceLocale(pathname: string, newLocale: Locale): string {

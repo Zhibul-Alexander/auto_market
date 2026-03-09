@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { Button, Card, CardBody, H2, Input, P, Hr } from '../../../components/ui';
+import { useAdminI18n } from '../../../lib/admin-i18n';
 
 type Lead = {
   id: number;
@@ -19,6 +20,7 @@ type Lead = {
 };
 
 export default function AdminLeadsPage() {
+  const { t } = useAdminI18n();
   const [status, setStatus] = useState('all');
   const [q, setQ] = useState('');
   const [items, setItems] = useState<Lead[]>([]);
@@ -80,7 +82,7 @@ export default function AdminLeadsPage() {
     if (res.ok) {
       setItems((prev) => prev.map((l) => (l.id === selected.id ? { ...l, note } : l)));
       setSelected({ ...selected, note });
-      setMsg('Saved.');
+      setMsg(t('leads.saved'));
     } else {
       const data = await res.json().catch(() => ({}));
       setMsg(data?.error || 'Save failed');
@@ -88,7 +90,7 @@ export default function AdminLeadsPage() {
   }
 
   async function remove(id: number) {
-    if (!confirm('Delete lead?')) return;
+    if (!confirm(t('leads.confirmDelete'))) return;
     const res = await fetch(`/api/admin/leads/${id}`, { method: 'DELETE' });
     if (res.ok) {
       setItems((prev) => prev.filter((l) => l.id !== id));
@@ -98,21 +100,21 @@ export default function AdminLeadsPage() {
 
   return (
     <div>
-      <H2>Leads</H2>
-      <P style={{ marginTop: 8 }}>Manage incoming leads: status, notes, delete.</P>
+      <H2>{t('leads.title')}</H2>
+      <P style={{ marginTop: 8 }}>{t('leads.desc')}</P>
       <div style={{ height: 12 }} />
 
       <Card>
         <CardBody>
           <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
             <select value={status} onChange={(e) => setStatus(e.target.value)} style={{ padding: 10, borderRadius: 12, border: '1px solid var(--border)', background: 'var(--surface2)', color: 'var(--text)' }}>
-              <option value="all">All</option>
-              <option value="new">New</option>
-              <option value="in_progress">In progress</option>
-              <option value="done">Done</option>
+              <option value="all">{t('leads.all')}</option>
+              <option value="new">{t('leads.new')}</option>
+              <option value="in_progress">{t('leads.inProgress')}</option>
+              <option value="done">{t('leads.done')}</option>
             </select>
-            <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search by phone/name" style={{ flex: '1 1 220px' }} />
-            <Button onClick={load} disabled={loading}>{loading ? 'Loading…' : 'Refresh'}</Button>
+            <Input value={q} onChange={(e) => setQ(e.target.value)} placeholder={t('leads.searchPlaceholder')} style={{ flex: '1 1 220px' }} />
+            <Button onClick={load} disabled={loading}>{loading ? t('leads.loading') : t('leads.refresh')}</Button>
           </div>
         </CardBody>
       </Card>
@@ -122,7 +124,7 @@ export default function AdminLeadsPage() {
       <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 14 }}>
         <Card>
           <CardBody>
-            <div style={{ fontWeight: 900, marginBottom: 10 }}>List ({items.length})</div>
+            <div style={{ fontWeight: 900, marginBottom: 10 }}>{t('leads.list')} ({items.length})</div>
             <div style={{ display: 'grid', gap: 10 }}>
               {items.map((l) => (
                 <button
@@ -133,7 +135,7 @@ export default function AdminLeadsPage() {
                     padding: 12,
                     borderRadius: 14,
                     border: '1px solid var(--border)',
-                    background: selected?.id === l.id ? 'rgba(255,107,53,0.12)' : 'rgba(255,255,255,0.02)',
+                    background: selected?.id === l.id ? 'rgba(255,107,53,0.08)' : '#F8FAFC',
                     cursor: 'pointer'
                   }}
                 >
@@ -147,46 +149,46 @@ export default function AdminLeadsPage() {
                   {l.message ? <div style={{ marginTop: 6, color: 'var(--muted)', fontSize: 13 }}>{l.message.slice(0, 120)}</div> : null}
                 </button>
               ))}
-              {!items.length ? <P style={{ color: 'var(--muted)' }}>No leads yet.</P> : null}
+              {!items.length ? <P style={{ color: 'var(--muted)' }}>{t('leads.noLeads')}</P> : null}
             </div>
           </CardBody>
         </Card>
 
         <Card>
           <CardBody>
-            <div style={{ fontWeight: 900, marginBottom: 10 }}>Details</div>
+            <div style={{ fontWeight: 900, marginBottom: 10 }}>{t('leads.details')}</div>
             {selected ? (
               <>
-                <P><b>Phone:</b> {selected.phone}</P>
-                <P><b>Name:</b> {selected.name || '—'}</P>
-                <P><b>Status:</b> {selected.status}</P>
-                <P><b>Page:</b> {selected.pageUrl}</P>
+                <P><b>{t('leads.phone')}:</b> {selected.phone}</P>
+                <P><b>{t('leads.name')}:</b> {selected.name || '—'}</P>
+                <P><b>{t('leads.status')}:</b> {selected.status}</P>
+                <P><b>{t('leads.page')}:</b> {selected.pageUrl}</P>
                 {selected.lotId ? <P><b>LotId:</b> {selected.lotId}</P> : null}
                 {selected.serviceSlug ? <P><b>Service:</b> {selected.serviceSlug}</P> : null}
 
                 <Hr />
 
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                  <Button onClick={() => updateStatus(selected.id, 'new')}>New</Button>
-                  <Button onClick={() => updateStatus(selected.id, 'in_progress')}>In progress</Button>
-                  <Button onClick={() => updateStatus(selected.id, 'done')}>Done</Button>
-                  <Button onClick={() => remove(selected.id)} style={{ borderColor: 'rgba(255,180,162,0.45)' }}>Delete</Button>
+                  <Button onClick={() => updateStatus(selected.id, 'new')}>{t('leads.new')}</Button>
+                  <Button onClick={() => updateStatus(selected.id, 'in_progress')}>{t('leads.inProgress')}</Button>
+                  <Button onClick={() => updateStatus(selected.id, 'done')}>{t('leads.done')}</Button>
+                  <Button onClick={() => remove(selected.id)} style={{ borderColor: '#FCA5A5', color: '#DC2626' }}>{t('leads.delete')}</Button>
                 </div>
 
                 <div style={{ height: 12 }} />
                 <textarea
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  placeholder="Internal note"
+                  placeholder={t('leads.notePlaceholder')}
                   style={{ width: '100%', minHeight: 120, padding: 12, borderRadius: 12, border: '1px solid var(--border)', background: 'var(--surface2)', color: 'var(--text)' }}
                 />
                 <div style={{ height: 10 }} />
-                <Button $variant="primary" onClick={saveNote}>Save note</Button>
+                <Button $variant="primary" onClick={saveNote}>{t('leads.saveNote')}</Button>
 
-                {msg ? <P style={{ marginTop: 10, color: msg === 'Saved.' ? '#8be28b' : '#ffb4a2' }}>{msg}</P> : null}
+                {msg ? <P style={{ marginTop: 10, color: msg === t('leads.saved') ? '#16A34A' : '#DC2626' }}>{msg}</P> : null}
               </>
             ) : (
-              <P style={{ color: 'var(--muted)' }}>Select a lead from the list.</P>
+              <P style={{ color: 'var(--muted)' }}>{t('leads.selectLead')}</P>
             )}
           </CardBody>
         </Card>

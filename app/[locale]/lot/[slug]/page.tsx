@@ -80,7 +80,7 @@ export default async function LotDetail({ params }: { params: { locale: Locale; 
               <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
                 <div>
                   <H2>{t('lot.price')}</H2>
-                  <div style={{ fontSize: 26, fontWeight: 900, marginTop: 8 }}>{price}</div>
+                  <div style={{ fontSize: 26, fontWeight: 700, marginTop: 8, color: '#FF6B35' }}>{price}</div>
                 </div>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', flexWrap: 'wrap' }}>
                   {v.bodyType ? <Badge>{v.bodyType}</Badge> : null}
@@ -171,9 +171,9 @@ const SpecGrid = (props: { children: React.ReactNode }) => (
 
 function Spec({ label, value }: { label: string; value: string }) {
   return (
-    <div style={{ border: '1px solid var(--border)', borderRadius: 14, padding: 12, background: 'rgba(255,255,255,0.02)' }}>
+    <div style={{ border: '1px solid var(--border)', borderRadius: 14, padding: 12, background: '#F8FAFC' }}>
       <div style={{ fontSize: 12, color: 'var(--muted)' }}>{label}</div>
-      <div style={{ fontWeight: 800, marginTop: 6 }}>{value}</div>
+      <div style={{ fontWeight: 800, marginTop: 6, color: 'var(--text)' }}>{value}</div>
     </div>
   );
 }

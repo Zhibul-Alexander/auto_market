@@ -33,7 +33,7 @@ const MainSlider = styled.div`
   border-radius: 16px;
   overflow: hidden;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.04);
+  background: #F1F5F9;
 
   .swiper {
     width: 100%;
@@ -131,7 +131,7 @@ const Placeholder = styled.div`
   aspect-ratio: 16 / 10;
   border-radius: 16px;
   border: 1px solid var(--border);
-  background: rgba(255, 255, 255, 0.04);
+  background: #F1F5F9;
   color: var(--muted);
   font-size: 14px;
 `;

@@ -21,8 +21,10 @@ const Panel = styled.div`
   border: 1px solid var(--border);
   border-radius: 18px;
   padding: 18px;
-  background: radial-gradient(1000px 400px at 20% 10%, rgba(255,107,53,0.16), transparent 50%),
-              rgba(255,255,255,0.02);
+  background:
+    radial-gradient(circle at 20% 10%, rgba(255,107,53,0.08), transparent 40%),
+    #FFFFFF;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.06);
 `;
 
 export default function HomeHero({
