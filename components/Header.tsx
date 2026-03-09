@@ -127,6 +127,7 @@ export default function Header({ locale }: { locale: Locale }) {
             <Link href={`/${locale}/catalog/cars`}>{t('nav.catalog')}</Link>
             <Link href={`/${locale}/services`}>{t('nav.services')}</Link>
             <Link href={`/${locale}/tracking`}>{t('nav.tracking')}</Link>
+            <Link href={`/${locale}/about`}>{t('nav.about')}</Link>
             <Link href={`/${locale}/contacts`}>{t('nav.contacts')}</Link>
           </Nav>
 

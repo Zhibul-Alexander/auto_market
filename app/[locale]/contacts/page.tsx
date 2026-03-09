@@ -1,7 +1,8 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Locale } from '../../../lib/i18n/routing';
-import { Grid, H2, P, Card, CardBody, Badge } from '../../../components/ui';
+import { Grid, H2, P, Card, CardBody, Badge, Hr } from '../../../components/ui';
 import LeadForm from '../../../components/LeadForm';
+import OfficesList from '../../../components/OfficesList';
 
 export default async function ContactsPage({ params }: { params: { locale: Locale } }) {
   setRequestLocale(params.locale);
@@ -26,6 +27,11 @@ export default async function ContactsPage({ params }: { params: { locale: Local
               <P style={{ color: 'var(--text)' }}>{t('contacts.note')}</P>
             </CardBody>
           </Card>
+
+          <div style={{ height: 20 }} />
+          <H2>{t('contacts.offices')}</H2>
+          <div style={{ height: 12 }} />
+          <OfficesList />
         </div>
 
         <div style={{ gridColumn: 'span 5' }}>

@@ -82,7 +82,18 @@ export const servicePage = sqliteTable(
   })
 );
 
+export const office = sqliteTable('Office', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
+  city: text('city').notNull(),
+  phone: text('phone').notNull(),
+  address: text('address'),
+  sortOrder: integer('sortOrder').notNull().default(0),
+  createdAt: text('createdAt').notNull(),
+  updatedAt: text('updatedAt').notNull()
+});
+
 export type Vehicle = typeof vehicle.$inferSelect;
 export type Lead = typeof lead.$inferSelect;
 export type TrackingEvent = typeof trackingEvent.$inferSelect;
 export type ServicePage = typeof servicePage.$inferSelect;
+export type Office = typeof office.$inferSelect;

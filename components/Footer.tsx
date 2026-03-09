@@ -45,6 +45,64 @@ const Links = styled.div`
   a:hover { color: var(--text); }
 `;
 
+const SocialRow = styled.div`
+  display: flex;
+  gap: 12px;
+  margin-top: 14px;
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: rgba(255,255,255,0.03);
+    color: var(--muted);
+    transition: color 120ms, border-color 120ms;
+  }
+  a:hover {
+    color: var(--text);
+    border-color: rgba(255,107,53,0.55);
+  }
+`;
+
+function TelegramIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21.198 2.433a2.242 2.242 0 0 0-1.022.215l-8.609 3.33c-2.068.8-4.133 1.598-5.724 2.21a405.15 405.15 0 0 1-2.849 1.09c-.42.147-.99.332-1.473.901-.728.855.058 1.665.478 1.969.364.263 5.71 1.899 5.71 1.899l2.25 6.893s.356.975 1.043 1.01c.41.02.752-.166 1.018-.392l2.73-2.543 5.16 3.856s.728.568 1.544.293c.828-.28 1.02-1.108 1.02-1.108l3.5-18.274s.262-1.455-.85-2.028a2.096 2.096 0 0 0-.926-.221Z" />
+    </svg>
+  );
+}
+
+function InstagramIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+      <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+    </svg>
+  );
+}
+
+function FacebookIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z" />
+    </svg>
+  );
+}
+
+function YouTubeIcon() {
+  return (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17" />
+      <path d="m10 15 5-3-5-3z" />
+    </svg>
+  );
+}
+
 export default function Footer({ locale }: { locale: Locale }) {
   const t = useTranslations();
 
@@ -55,6 +113,12 @@ export default function Footer({ locale }: { locale: Locale }) {
           <div>
             <ColTitle>{t('common.brand')}</ColTitle>
             <Small>{t('footer.tagline')}</Small>
+            <SocialRow>
+              <a href="https://t.me/" target="_blank" rel="noopener noreferrer" aria-label="Telegram"><TelegramIcon /></a>
+              <a href="https://instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram"><InstagramIcon /></a>
+              <a href="https://facebook.com/" target="_blank" rel="noopener noreferrer" aria-label="Facebook"><FacebookIcon /></a>
+              <a href="https://youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><YouTubeIcon /></a>
+            </SocialRow>
             <Hr />
             <Small>© {new Date().getFullYear()} {t('common.brand')}</Small>
           </div>
@@ -65,6 +129,7 @@ export default function Footer({ locale }: { locale: Locale }) {
               <Link href={`/${locale}/catalog/cars`}>{t('nav.catalog')}</Link>
               <Link href={`/${locale}/services`}>{t('nav.services')}</Link>
               <Link href={`/${locale}/tracking`}>{t('nav.tracking')}</Link>
+              <Link href={`/${locale}/about`}>{t('nav.about')}</Link>
               <Link href={`/${locale}/contacts`}>{t('nav.contacts')}</Link>
             </Links>
           </div>

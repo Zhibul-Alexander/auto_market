@@ -11,9 +11,25 @@ const intlMiddleware = createIntlMiddleware({
 export default async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // Protect admin routes (no locale prefix).
-  if (pathname.startsWith('/admin') || pathname.startsWith('/api/admin')) {
-    if (pathname === '/admin/login' || pathname.startsWith('/api/admin/login')) {
+  // Skip locale middleware for all API routes.
+  if (pathname.startsWith('/api/')) {
+    if (pathname.startsWith('/api/admin')) {
+      if (pathname.startsWith('/api/admin/login')) {
+        return NextResponse.next();
+      }
+
+      const cookie = req.cookies.get('admin_session')?.value;
+      if (!cookie || !(await verifyAdminSession(cookie))) {
+        return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
+      }
+    }
+
+    return NextResponse.next();
+  }
+
+  // Protect admin UI routes (no locale prefix).
+  if (pathname.startsWith('/admin')) {
+    if (pathname === '/admin/login') {
       return NextResponse.next();
     }
 

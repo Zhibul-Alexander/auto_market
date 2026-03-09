@@ -44,7 +44,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <Nav>
             <Link href="/admin/import">Import</Link>
             <Link href="/admin/leads">Leads</Link>
-            <Link href="/admin/vehicles">Vehicles</Link>
+            <Link href="/admin/offices">Offices</Link>
           </Nav>
         </Top>
 

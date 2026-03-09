@@ -1,22 +1,26 @@
-export const runtime = 'edge';
-
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Locale } from '../../../lib/i18n/routing';
 import Link from 'next/link';
 import { Card, CardBody, H2, P, Grid, Button } from '../../../components/ui';
-import { listServices, upsertDefaultServicesIfEmpty } from '../../../lib/server/services';
 
 export default async function ServicesPage({ params }: { params: { locale: Locale } }) {
   setRequestLocale(params.locale);
   const t = await getTranslations({ locale: params.locale });
 
-  let services: any[] = [];
-  try {
-    await upsertDefaultServicesIfEmpty();
-    services = await listServices(params.locale);
-  } catch (err) {
-    console.error('[Services] DB error:', err);
-  }
+  const services = [
+    {
+      slug: 'customs',
+      href: `/${params.locale}/services/customs`,
+      title: t('services.customs.title'),
+      subtitle: t('services.customs.subtitle')
+    },
+    {
+      slug: 'delivery',
+      href: `/${params.locale}/services/delivery`,
+      title: t('services.delivery.title'),
+      subtitle: t('services.delivery.subtitle')
+    }
+  ];
 
   return (
     <div>
@@ -27,11 +31,11 @@ export default async function ServicesPage({ params }: { params: { locale: Local
       <Grid>
         {services.map((s) => (
           <div key={s.slug} style={{ gridColumn: 'span 6' }}>
-            <Link href={`/${params.locale}/services/${s.slug}`}>
+            <Link href={s.href}>
               <Card>
                 <CardBody>
                   <H2>{s.title}</H2>
-                  <P style={{ marginTop: 10 }}>{t('services.openHint')}</P>
+                  <P style={{ marginTop: 10 }}>{s.subtitle}</P>
                   <div style={{ height: 14 }} />
                   <Button $variant="primary">{t('services.open')}</Button>
                 </CardBody>

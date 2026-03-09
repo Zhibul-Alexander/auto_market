@@ -39,8 +39,9 @@
   "nav": {
     "catalog": "Catalog",
     "services": "Services",
-    "tracking": "VIN tracking",
-    "contacts": "Contacts"
+    "tracking": "Tracking",
+    "contacts": "Contacts",
+    "about": "About"
   },
   "footer": {
     "tagline": "Clean catalog, transparent price rules, lead forms and VIN tracking.",
@@ -68,15 +69,23 @@
     "cars": "Cars",
     "carsDesc": "Sedans, hatchbacks, crossovers, SUVs and more.",
     "moto": "Motorcycles",
-    "motoDesc": "Bikes and scooters (if available).",
+    "motoDesc": "Motorcycles, buggies, ATVs, scooters and snowmobiles.",
     "water": "Water transport",
     "waterDesc": "Boats and watercraft (if available).",
     "special": "Special equipment",
     "specialDesc": "Commercial / special machinery (if available).",
     "carsSub": "Server-side filtering, sorting and pagination. Filters are saved in the URL.",
     "segmentSub": "Segment: {segment}. You can still add extra filters.",
+    "motoSegmentSub": "Segment: {segment}. You can still add extra filters.",
     "minimal": "Simple list for this category (filters can be added later).",
-    "hint": "Tip: filters are reflected in the URL, so you can share a ready-made selection."
+    "hint": "Tip: filters are reflected in the URL, so you can share a ready-made selection.",
+    "motoSegments": {
+      "motorcycles": "Motorcycles",
+      "buggies": "Buggies",
+      "atvs": "ATVs",
+      "scooters": "Scooters",
+      "snowmobiles": "Snowmobiles"
+    }
   },
   "lot": {
     "subtitle": "Lot #{id}",
@@ -111,12 +120,92 @@
   },
   "services": {
     "title": "Services",
-    "subtitle": "Everything around the lot: delivery, checks, documents and handover.",
-    "open": "Open service",
+    "subtitle": "Everything around the lot: delivery, customs clearance, checks and handover.",
+    "open": "Learn more",
     "openHint": "Details, steps and FAQ",
     "ctaTitle": "Need this service?",
     "ctaText": "Leave a request — we’ll уточним сроки, стоимость и список документов.",
-    "leadTitle": "Request this service"
+    "leadTitle": "Request this service",
+    "customs": {
+      "title": "Car Customs Clearance from USA in Georgia",
+      "subtitle": "We handle the entire customs process — from paperwork to license plates.",
+      "intro": "Customs clearance in Georgia involves several steps: VIN inspection, duty calculation based on engine size and model year, and filing the declaration. We guide you through every stage so you receive your car with a complete document package and no unnecessary delays.",
+      "stepsTitle": "Customs clearance steps",
+      "steps": [
+        "Obtaining a Georgian TIN (if needed) — issued at the tax office within minutes",
+        "Vehicle inspection — an officer verifies the VIN, specs and document match",
+        "Preparing and filing the customs declaration — Title, Bill of Sale, Bill of Lading",
+        "Calculating and paying customs duties — amount depends on vehicle type, year and engine size",
+        "Registration and license plates — the final step, after which the car is fully yours"
+      ],
+      "costsTitle": "Costs and fees",
+      "costsIntro": "The customs duty depends on three factors: vehicle type, model year and engine displacement. In addition, fixed service fees apply:",
+      "costs": [
+        "Inspection report — 30 GEL",
+        "Customs declaration filing — 50 GEL",
+        "Registration services — 150 GEL"
+      ],
+      "docsTitle": "Required documents",
+      "docs": [
+        "Owner's passport (or power of attorney)",
+        "Title (US certificate of ownership)",
+        "Bill of Sale (purchase agreement)",
+        "Bill of Lading (ocean shipping document)",
+        "Georgian TIN"
+      ],
+      "notesTitle": "Important to know",
+      "notes": [
+        "Vehicles must meet the Euro 5 standard (generally 2013+) for registration in Georgia",
+        "Right-hand-drive vehicles are subject to a triple excise rate",
+        "Electric and hybrid vehicles enjoy reduced customs duties",
+        "Classic cars older than 40 years are exempt from certain requirements"
+      ],
+      "benefitsTitle": "Why clients choose us",
+      "benefits": [
+        "Hundreds of US and Canadian vehicles cleared through customs",
+        "Transparent duty calculation — you know the total before the process starts",
+        "Processing from 1 business day — no unnecessary delays",
+        "Full support: from inspection to license plates",
+        "We operate in all major Georgian cities"
+      ]
+    },
+    "delivery": {
+      "title": "Car Delivery from USA and Canada to Georgia",
+      "subtitle": "End-to-end logistics: from American auction to your city in Georgia.",
+      "intro": "We arrange delivery of vehicles from the largest US and Canadian auctions (Copart, IAAI) to the port of Poti and onward to your city. We work with trusted logistics partners and provide tracking at every stage — you always know where your car is.",
+      "stepsTitle": "Delivery stages",
+      "steps": [
+        "Auction purchase — we bid on your behalf at Copart and IAAI",
+        "Pickup from the auction yard — transport to the consolidation warehouse",
+        "Ground shipping to the US departure port (New York, Florida, California or other)",
+        "Container loading and ocean freight to the port of Poti (Georgia)",
+        "Unloading, customs clearance and delivery to your city"
+      ],
+      "routesTitle": "Routes and timelines",
+      "routesIntro": "Delivery time depends on the US departure port:",
+      "routes": [
+        "East Coast (New York, New Jersey) — 60–75 days",
+        "Florida — 35–45 days (fastest route)",
+        "West Coast (California) — 70–90 days",
+        "Canada — 60–80 days depending on province"
+      ],
+      "includesTitle": "What's included in the price",
+      "includes": [
+        "Auction fees (Buyer Fee, Gate Fee)",
+        "Ground transport to the departure port",
+        "Ocean freight to the port of Poti",
+        "Export documentation and cargo insurance",
+        "Unloading at the port of Poti"
+      ],
+      "benefitsTitle": "Our advantages",
+      "benefits": [
+        "Working with trusted international logistics companies",
+        "Average delivery time: 45–60 days from purchase to handover",
+        "Online status tracking at every stage",
+        "Cargo insurance throughout the entire route",
+        "Delivery to any Georgian city: Tbilisi, Batumi, Kutaisi and more"
+      ]
+    }
   },
   "tracking": {
     "title": "VIN tracking",
@@ -133,7 +222,41 @@
     "city": "Tbilisi (GE)",
     "hours": "Daily",
     "response": "Fast response",
-    "note": "We accept requests in Georgian, Russian and English."
+    "note": "We accept requests in Georgian, Russian and English.",
+    "offices": "Our offices"
+  },
+  "about": {
+    "title": "About",
+    "subtitle": "Auto Market — your reliable partner for importing vehicles from the USA to Georgia.",
+    "intro": "We help clients purchase vehicles from American auctions at the best prices. Our team handles the entire process: from vehicle selection to delivery and customs clearance.",
+    "statsTitle": "Our company in numbers",
+    "stats": {
+      "vehicles": "Vehicles delivered",
+      "vehiclesValue": "2,000+",
+      "clients": "Satisfied clients",
+      "clientsValue": "1,500+",
+      "experience": "Years in business",
+      "experienceValue": "10+",
+      "cities": "Cities with offices",
+      "citiesValue": "6"
+    },
+    "whyTitle": "Why choose us",
+    "whyItems": [
+      "Direct access to Copart and IAAI auctions",
+      "Transparent pricing with no hidden fees",
+      "Full support: purchase, delivery, customs clearance",
+      "Vehicle tracking at every stage",
+      "Experienced team of specialists",
+      "Offices in key Georgian cities"
+    ],
+    "howTitle": "How we work",
+    "howSteps": [
+      "You choose a vehicle from our catalog or tell us your desired model",
+      "We check the history, condition and calculate the full cost",
+      "After confirmation, we bid at auction on your behalf",
+      "We organize delivery and customs clearance",
+      "You receive the vehicle with a complete document package"
+    ]
   },
   "privacy": {
     "title": "Privacy policy",
