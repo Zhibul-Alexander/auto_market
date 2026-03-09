@@ -23,6 +23,8 @@ export const vehicle = sqliteTable(
     bodyTypeRaw: text('bodyTypeRaw'),
     bodyType: text('bodyType'),
     engineVolumeL: real('engineVolumeL'),
+    odometerReading: integer('odometerReading'),
+    odometerUnit: text('odometerUnit'),
     buyItNow: real('buyItNow'),
     estRetail: real('estRetail'),
     displayedPrice: real('displayedPrice'),

@@ -132,6 +132,10 @@ export default async function LotDetail({ params }: { params: { locale: Locale; 
                     thumbUrl: it.thumbUrl,
                     bodyType: it.bodyType,
                     engineVolumeL: it.engineVolumeL,
+                    odometerReading: it.odometerReading,
+                    odometerUnit: it.odometerUnit,
+                    driveType: it.driveType,
+                    fuelType: it.fuelType,
                     displayedPrice: it.displayedPrice,
                     currency: it.currency
                   }}

@@ -19,6 +19,8 @@ const LotSchema = z.object({
   transmission: z.string().optional().nullable(),
   drive: z.string().optional().nullable(),
   fuel: z.string().optional().nullable(),
+  odometer_reading: z.coerce.number().optional().nullable(),
+  odometer: z.string().optional().nullable(),
   buy_it_now_price: z.any().optional().nullable(),
   estimated_retail_value: z.any().optional().nullable(),
   imageUrl: z.string().optional().nullable(),
@@ -83,6 +85,13 @@ export async function importLotsFromJsonText(text: string, mode: ImportMode) {
     const driveType = normalizeDriveType(v.drive);
     const transmissionType = normalizeTransmissionType(v.transmission);
 
+    const odometerReading = (v.odometer_reading != null && Number.isFinite(v.odometer_reading) && v.odometer_reading > 0)
+      ? Math.round(v.odometer_reading)
+      : null;
+    const odometerUnit = v.odometer
+      ? (v.odometer.toLowerCase().includes('km') ? 'km' : 'mi')
+      : (odometerReading != null ? 'mi' : null);
+
     const category = (v.category ?? 'cars') as string;
 
     const slug = buildSlug(v.year, v.make, v.model, externalId);
@@ -119,6 +128,8 @@ export async function importLotsFromJsonText(text: string, mode: ImportMode) {
       bodyTypeRaw,
       bodyType,
       engineVolumeL,
+      odometerReading,
+      odometerUnit,
       buyItNow,
       estRetail,
       displayedPrice,
@@ -151,48 +162,70 @@ export async function importLotsFromJsonText(text: string, mode: ImportMode) {
   let updated = 0;
   let failed = errors.length;
 
-  // We will chunk to avoid big payloads.
-  // D1 имеет строгий лимит bind-переменных — вставляем по одной строке
-  for (let i = 0; i < rowsToUpsert.length; i++) {
-    try {
-      await db
+  const upsertSet = {
+    slug: sql`excluded.slug`,
+    category: sql`excluded.category`,
+    year: sql`excluded.year`,
+    make: sql`excluded.make`,
+    model: sql`excluded.model`,
+    trim: sql`excluded.trim`,
+    fullModelName: sql`excluded.fullModelName`,
+    vin: sql`excluded.vin`,
+    color: sql`excluded.color`,
+    fuelRaw: sql`excluded.fuelRaw`,
+    fuelType: sql`excluded.fuelType`,
+    driveRaw: sql`excluded.driveRaw`,
+    driveType: sql`excluded.driveType`,
+    transmissionRaw: sql`excluded.transmissionRaw`,
+    transmissionType: sql`excluded.transmissionType`,
+    bodyTypeRaw: sql`excluded.bodyTypeRaw`,
+    bodyType: sql`excluded.bodyType`,
+    engineVolumeL: sql`excluded.engineVolumeL`,
+    odometerReading: sql`excluded.odometerReading`,
+    odometerUnit: sql`excluded.odometerUnit`,
+    buyItNow: sql`excluded.buyItNow`,
+    estRetail: sql`excluded.estRetail`,
+    displayedPrice: sql`excluded.displayedPrice`,
+    currency: sql`excluded.currency`,
+    itemUrl: sql`excluded.itemUrl`,
+    thumbUrl: sql`excluded.thumbUrl`,
+    galleryJson: sql`excluded.galleryJson`,
+    updatedAt: sql`excluded.updatedAt`
+  };
+
+  // Батчим upsert-запросы, чтобы не перегружать workerd сотнями отдельных вызовов
+  const BATCH_SIZE = 50;
+
+  for (let batchStart = 0; batchStart < rowsToUpsert.length; batchStart += BATCH_SIZE) {
+    const chunk = rowsToUpsert.slice(batchStart, batchStart + BATCH_SIZE);
+    const queries = chunk.map((row: any) =>
+      db
         .insert(vehicle)
-        .values(rowsToUpsert[i]!)
-        .onConflictDoUpdate({
-          target: vehicle.externalId,
-          set: {
-            slug: sql`excluded.slug`,
-            category: sql`excluded.category`,
-            year: sql`excluded.year`,
-            make: sql`excluded.make`,
-            model: sql`excluded.model`,
-            trim: sql`excluded.trim`,
-            fullModelName: sql`excluded.fullModelName`,
-            vin: sql`excluded.vin`,
-            color: sql`excluded.color`,
-            fuelRaw: sql`excluded.fuelRaw`,
-            fuelType: sql`excluded.fuelType`,
-            driveRaw: sql`excluded.driveRaw`,
-            driveType: sql`excluded.driveType`,
-            transmissionRaw: sql`excluded.transmissionRaw`,
-            transmissionType: sql`excluded.transmissionType`,
-            bodyTypeRaw: sql`excluded.bodyTypeRaw`,
-            bodyType: sql`excluded.bodyType`,
-            engineVolumeL: sql`excluded.engineVolumeL`,
-            buyItNow: sql`excluded.buyItNow`,
-            estRetail: sql`excluded.estRetail`,
-            displayedPrice: sql`excluded.displayedPrice`,
-            currency: sql`excluded.currency`,
-            itemUrl: sql`excluded.itemUrl`,
-            thumbUrl: sql`excluded.thumbUrl`,
-            galleryJson: sql`excluded.galleryJson`,
-            updatedAt: sql`excluded.updatedAt`
-          }
-        });
-      inserted++;
-    } catch (e: any) {
-      failed++;
-      errors.push({ index: i, externalId: rowsToUpsert[i]!.externalId, error: e?.message || 'Insert failed' });
+        .values(row)
+        .onConflictDoUpdate({ target: vehicle.externalId, set: upsertSet })
+    );
+
+    try {
+      await db.batch(queries as [typeof queries[0], ...typeof queries]);
+      inserted += chunk.length;
+    } catch {
+      // Если батч упал — откатываемся к поштучной вставке для этого чанка
+      for (let j = 0; j < chunk.length; j++) {
+        try {
+          await db
+            .insert(vehicle)
+            .values(chunk[j]!)
+            .onConflictDoUpdate({ target: vehicle.externalId, set: upsertSet });
+          inserted++;
+        } catch (innerE: any) {
+          failed++;
+          errors.push({
+            index: batchStart + j,
+            externalId: chunk[j]!.externalId,
+            error: innerE?.message || 'Insert failed'
+          });
+        }
+      }
     }
   }
 

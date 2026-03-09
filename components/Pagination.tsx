@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import styled from 'styled-components';
 import { Button } from './ui';
+import { useTranslations } from 'next-intl';
 
 const Wrap = styled.div`
   display: flex;
@@ -11,6 +12,7 @@ const Wrap = styled.div`
   align-items: center;
   gap: 12px;
   margin-top: 18px;
+  flex-wrap: wrap;
 `;
 
 const Info = styled.div`
@@ -33,6 +35,7 @@ export default function Pagination({
   page: number;
   pageSize: number;
 }) {
+  const t = useTranslations('common');
   const pathname = usePathname() || '';
   const sp = useSearchParams();
   const params = new URLSearchParams(sp?.toString() || '');
@@ -41,17 +44,19 @@ export default function Pagination({
   const prev = Math.max(1, page - 1);
   const next = Math.min(totalPages, page + 1);
 
+  if (total === 0) return null;
+
   return (
     <Wrap>
       <Info>
-        {total.toLocaleString()} items · page {page}/{totalPages}
+        {total.toLocaleString()} {t('items')} · {t('page')} {page}/{totalPages}
       </Info>
       <div style={{ display: 'flex', gap: 10 }}>
         <Link href={withPage(pathname, params, prev)} aria-disabled={page === 1} tabIndex={page === 1 ? -1 : 0}>
-          <Button disabled={page === 1}>Prev</Button>
+          <Button disabled={page === 1}>{t('prev')}</Button>
         </Link>
         <Link href={withPage(pathname, params, next)} aria-disabled={page === totalPages} tabIndex={page === totalPages ? -1 : 0}>
-          <Button disabled={page === totalPages}>Next</Button>
+          <Button disabled={page === totalPages}>{t('next')}</Button>
         </Link>
       </div>
     </Wrap>

@@ -78,7 +78,7 @@ export default async function CarsListing({
 
       <Grid>
         <div style={{ gridColumn: 'span 4' }}>
-          <FiltersPanel />
+          <FiltersPanel total={data.total} />
         </div>
         <div style={{ gridColumn: 'span 8' }}>
           <Grid>
@@ -96,6 +96,10 @@ export default async function CarsListing({
                     thumbUrl: it.thumbUrl,
                     bodyType: it.bodyType,
                     engineVolumeL: it.engineVolumeL,
+                    odometerReading: it.odometerReading,
+                    odometerUnit: it.odometerUnit,
+                    driveType: it.driveType,
+                    fuelType: it.fuelType,
                     displayedPrice: it.displayedPrice,
                     currency: it.currency
                   }}

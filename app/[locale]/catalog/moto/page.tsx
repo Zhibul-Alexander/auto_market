@@ -28,6 +28,7 @@ export default async function Moto({ params }: { params: { locale: Locale } }) {
             <LotCard locale={params.locale} item={{
               slug: it.slug, year: it.year, make: it.make, model: it.model, trim: it.trim,
               fullModelName: it.fullModelName, thumbUrl: it.thumbUrl, bodyType: it.bodyType, engineVolumeL: it.engineVolumeL,
+              odometerReading: it.odometerReading, odometerUnit: it.odometerUnit, driveType: it.driveType, fuelType: it.fuelType,
               displayedPrice: it.displayedPrice, currency: it.currency
             }} />
           </div>

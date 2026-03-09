@@ -63,6 +63,10 @@ export default function LotCard({
     thumbUrl?: string | null;
     bodyType?: string | null;
     engineVolumeL?: number | null;
+    odometerReading?: number | null;
+    odometerUnit?: string | null;
+    driveType?: string | null;
+    fuelType?: string | null;
     displayedPrice?: number | null;
     currency?: string | null;
   };
@@ -75,6 +79,10 @@ export default function LotCard({
 
   const price = item.displayedPrice != null ? `${formatMoney(item.displayedPrice)} ${item.currency || 'USD'}` : t('common.priceOnRequest');
 
+  const odometer = item.odometerReading != null
+    ? `${formatMoney(item.odometerReading)} ${item.odometerUnit || 'mi'}`
+    : null;
+
   return (
     <Link href={`/${locale}/lot/${item.slug}`} aria-label={title}>
       <Card>
@@ -85,8 +93,11 @@ export default function LotCard({
         <CardBody>
           <Title>{title}</Title>
           <Meta>
-            {item.bodyType ? <Badge>{item.bodyType}</Badge> : null}
+            <Badge>{item.year}</Badge>
+            {odometer ? <Badge>{odometer}</Badge> : null}
             {item.engineVolumeL ? <Badge>{item.engineVolumeL.toFixed(1)}L</Badge> : null}
+            {item.driveType ? <Badge>{item.driveType.toUpperCase()}</Badge> : null}
+            {item.fuelType ? <Badge>{item.fuelType}</Badge> : null}
           </Meta>
           <Price>{price}</Price>
         </CardBody>

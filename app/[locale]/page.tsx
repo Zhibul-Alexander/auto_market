@@ -22,6 +22,10 @@ export default async function HomePage({ params }: { params: { locale: Locale } 
       thumbUrl: string | null;
       bodyType: string | null;
       engineVolumeL: number | null;
+      odometerReading: number | null;
+      odometerUnit: string | null;
+      driveType: string | null;
+      fuelType: string | null;
       displayedPrice: number | null;
       currency: string | null;
     }[] = [];
@@ -45,6 +49,10 @@ export default async function HomePage({ params }: { params: { locale: Locale } 
         thumbUrl: row.thumbUrl ?? null,
         bodyType: row.bodyType ?? null,
         engineVolumeL: row.engineVolumeL ?? null,
+        odometerReading: row.odometerReading ?? null,
+        odometerUnit: row.odometerUnit ?? null,
+        driveType: row.driveType ?? null,
+        fuelType: row.fuelType ?? null,
         displayedPrice: row.displayedPrice ?? null,
         currency: row.currency ?? null
       }));

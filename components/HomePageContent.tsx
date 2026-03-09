@@ -17,6 +17,10 @@ type VehicleRow = {
   thumbUrl?: string | null;
   bodyType?: string | null;
   engineVolumeL?: number | null;
+  odometerReading?: number | null;
+  odometerUnit?: string | null;
+  driveType?: string | null;
+  fuelType?: string | null;
   displayedPrice?: number | null;
   currency?: string | null;
 };
@@ -76,6 +80,10 @@ export default function HomePageContent({
                 thumbUrl: it.thumbUrl,
                 bodyType: it.bodyType,
                 engineVolumeL: it.engineVolumeL,
+                odometerReading: it.odometerReading,
+                odometerUnit: it.odometerUnit,
+                driveType: it.driveType,
+                fuelType: it.fuelType,
                 displayedPrice: it.displayedPrice,
                 currency: it.currency
               }}
