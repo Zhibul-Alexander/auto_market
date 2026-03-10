@@ -11,7 +11,7 @@ const LotSchema = z.object({
   item_url: z.string().optional().nullable(),
   year: z.coerce.number().int().min(1900).max(2100),
   make: z.string().min(1),
-  model: z.string().min(1),
+  model: z.string().optional().nullable(),
   trim: z.string().optional().nullable(),
   full_model_name: z.string().optional().nullable(),
   vin: z.string().optional().nullable(),
@@ -68,9 +68,29 @@ export async function importLotsFromJsonText(text: string, mode: ImportMode) {
     const v = parsed.data;
     const externalId = String(v.lot_number);
 
+    const bsDetails = v.build_sheet?.chromeBuildSheetDetailsVO;
+
+    const resolvedModel = v.model?.trim()
+      || v.full_model_name?.trim()
+      || (typeof bsDetails?.model === 'string' ? bsDetails.model.trim() : '')
+      || '';
+
+    if (!resolvedModel) {
+      errors.push({ index: i, externalId, error: 'Skipped: could not determine model' });
+      continue;
+    }
+
+    const resolvedTrim = v.trim?.trim()
+      || (typeof bsDetails?.trim === 'string' ? bsDetails.trim.trim() : '')
+      || null;
+
     const buyItNow = toPositiveNumberOrNull(v.buy_it_now_price);
-    // estimated_retail_value could be -1 etc => null
     const estRetail = toPositiveNumberOrNull(v.estimated_retail_value);
+
+    if (!buyItNow && !estRetail) {
+      errors.push({ index: i, externalId, error: 'Skipped: no valid buy_it_now_price or estimated_retail_value' });
+      continue;
+    }
 
     const displayedPrice = computeDisplayedPrice(buyItNow, estRetail);
 
@@ -94,7 +114,7 @@ export async function importLotsFromJsonText(text: string, mode: ImportMode) {
 
     const category = (v.category ?? 'cars') as string;
 
-    const slug = buildSlug(v.year, v.make, v.model, externalId);
+    const slug = buildSlug(v.year, v.make, resolvedModel, externalId);
 
     // Фильтруем URL-ы: отбрасываем пустые строки и невалидные адреса
     const validImages = Array.isArray(v.images_full)
@@ -114,8 +134,8 @@ export async function importLotsFromJsonText(text: string, mode: ImportMode) {
       category,
       year: v.year,
       make: String(v.make).toUpperCase(),
-      model: String(v.model).toUpperCase(),
-      trim: v.trim ? String(v.trim) : null,
+      model: resolvedModel.toUpperCase(),
+      trim: resolvedTrim,
       fullModelName: v.full_model_name ? String(v.full_model_name) : null,
       vin: v.vin ? String(v.vin) : null,
       color: v.color ? String(v.color) : null,

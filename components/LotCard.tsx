@@ -69,16 +69,19 @@ export default function LotCard({
     driveType?: string | null;
     fuelType?: string | null;
     displayedPrice?: number | null;
+    buyItNow?: number | null;
+    estRetail?: number | null;
     currency?: string | null;
   };
 }) {
   const t = useTranslations();
 
+  const estimatedPrice = computeEstimatedPrice(item.displayedPrice, item.buyItNow, item.estRetail);
+  const price = estimatedPrice != null ? `${formatMoney(estimatedPrice)} ${item.currency || 'USD'}` : t('common.priceOnRequest');
+
   const title =
     item.fullModelName?.trim() ||
     `${item.year} ${item.make} ${item.model}${item.trim ? ` ${item.trim}` : ''}`.trim();
-
-  const price = item.displayedPrice != null ? `${formatMoney(item.displayedPrice)} ${item.currency || 'USD'}` : t('common.priceOnRequest');
 
   const odometer = item.odometerReading != null
     ? `${formatMoney(item.odometerReading)} ${item.odometerUnit || 'mi'}`
@@ -109,4 +112,15 @@ export default function LotCard({
 
 function formatMoney(v: number) {
   return v.toLocaleString(undefined, { maximumFractionDigits: 0 });
+}
+
+function computeEstimatedPrice(displayedPrice: number | null | undefined, buyItNow: number | null | undefined, estRetail: number | null | undefined): number | null {
+  const b = buyItNow != null && buyItNow > 0 ? buyItNow : null;
+  const e = estRetail != null && estRetail > 0 ? estRetail : null;
+
+  if (displayedPrice != null && displayedPrice > 0) return displayedPrice;
+  if (b && e) return Math.round(Math.min(0.65 * e, 0.70 * b) * 100) / 100;
+  if (b) return Math.round(0.70 * b * 100) / 100;
+  if (e) return Math.round(0.65 * e * 100) / 100;
+  return null;
 }

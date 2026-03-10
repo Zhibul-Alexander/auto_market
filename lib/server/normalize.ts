@@ -93,11 +93,11 @@ function round1(v: number): number {
 
 export function computeDisplayedPrice(buyItNow: unknown, estRetail: unknown): number | null {
   const b = toPositiveNumberOrNull(buyItNow);
-  if (b && b > 0) return b;
-
   const e = toPositiveNumberOrNull(estRetail);
-  if (e && e > 0) return Math.round((0.5 * e) * 100) / 100;
 
+  if (b && e) return Math.round(Math.min(0.65 * e, 0.70 * b) * 100) / 100;
+  if (b) return Math.round(0.70 * b * 100) / 100;
+  if (e) return Math.round(0.65 * e * 100) / 100;
   return null;
 }
 

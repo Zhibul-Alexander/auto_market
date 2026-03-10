@@ -101,6 +101,8 @@ export default async function CarsListing({
                     driveType: it.driveType,
                     fuelType: it.fuelType,
                     displayedPrice: it.displayedPrice,
+                    buyItNow: it.buyItNow,
+                    estRetail: it.estRetail,
                     currency: it.currency
                   }}
                 />
