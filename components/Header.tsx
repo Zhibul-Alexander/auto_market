@@ -6,6 +6,7 @@ import styled from 'styled-components';
 import { useTranslations } from 'next-intl';
 import type { Locale } from '../lib/i18n/routing';
 import { Container, Button } from './ui';
+import LangSwitcher from './LangSwitcher';
 
 const Wrap = styled.header`
   position: sticky;
@@ -53,7 +54,7 @@ const Nav = styled.nav`
     transition: color 120ms ease, background 120ms ease, border-color 120ms ease;
   }
 
-  a:hover {
+  a:hover, a.active {
     color: var(--text);
     border-color: var(--border);
     background: var(--hover-bg);
@@ -70,31 +71,12 @@ const Right = styled.div`
   gap: 10px;
 `;
 
-const Lang = styled.div`
-  display: flex;
-  gap: 6px;
-  padding: 4px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: #F8FAFC;
-`;
-
-const LangLink = styled(Link)<{ $active?: boolean }>`
-  padding: 6px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
-  color: ${(p) => (p.$active ? '#FFFFFF' : 'var(--muted)')};
-  background: ${(p) => (p.$active ? 'var(--accent)' : 'transparent')};
-  transition: color 120ms ease, background 120ms ease;
-`;
 
 function replaceLocale(pathname: string, newLocale: Locale): string {
   const parts = pathname.split('?')[0].split('/').filter(Boolean);
   if (parts.length === 0) return `/${newLocale}`;
-  // if first segment is locale, replace; otherwise prepend
   const first = parts[0];
-  const known: Locale[] = ['ka', 'ru', 'en'];
+  const known: Locale[] = ['ge', 'ru', 'en'];
   if ((known as string[]).includes(first)) {
     parts[0] = newLocale;
     return '/' + parts.join('/');
@@ -109,10 +91,9 @@ export default function Header({ locale }: { locale: Locale }) {
   const qs = sp?.toString();
   const base = qs ? `${pathname}?${qs}` : pathname;
 
-  const mk = (l: Locale) => {
-    const p = replaceLocale(base, l);
-    return p;
-  };
+  const mk = (l: Locale) => replaceLocale(base, l);
+
+  const isActive = (segment: string) => pathname.includes(`/${locale}/${segment}`);
 
   return (
     <Wrap>
@@ -126,19 +107,19 @@ export default function Header({ locale }: { locale: Locale }) {
           </Link>
 
           <Nav>
-            <Link href={`/${locale}/catalog/cars`}>{t('nav.catalog')}</Link>
-            <Link href={`/${locale}/services`}>{t('nav.services')}</Link>
-            <Link href={`/${locale}/tracking`}>{t('nav.tracking')}</Link>
-            <Link href={`/${locale}/about`}>{t('nav.about')}</Link>
-            <Link href={`/${locale}/contacts`}>{t('nav.contacts')}</Link>
+            <Link href={`/${locale}/catalog/cars`} className={isActive('catalog') ? 'active' : ''}>{t('nav.catalog')}</Link>
+            <Link href={`/${locale}/services`} className={isActive('services') ? 'active' : ''}>{t('nav.services')}</Link>
+            <Link href={`/${locale}/tracking`} className={isActive('tracking') ? 'active' : ''}>{t('nav.tracking')}</Link>
+            <Link href={`/${locale}/about`} className={isActive('about') ? 'active' : ''}>{t('nav.about')}</Link>
+            <Link href={`/${locale}/contacts`} className={isActive('contacts') ? 'active' : ''}>{t('nav.contacts')}</Link>
           </Nav>
 
           <Right>
-            <Lang aria-label="Language switcher">
-              <LangLink href={mk('ka')} $active={locale === 'ka'}>KA</LangLink>
-              <LangLink href={mk('ru')} $active={locale === 'ru'}>RU</LangLink>
-              <LangLink href={mk('en')} $active={locale === 'en'}>EN</LangLink>
-            </Lang>
+            <LangSwitcher items={[
+              { label: 'GE', active: locale === 'ge', href: mk('ge') },
+              { label: 'RU', active: locale === 'ru', href: mk('ru') },
+              { label: 'EN', active: locale === 'en', href: mk('en') },
+            ]} />
 
             <Link href={`/${locale}/contacts`}>
               <Button $variant="primary">{t('common.cta')}</Button>

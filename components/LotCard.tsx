@@ -80,7 +80,6 @@ export default function LotCard({
   const price = estimatedPrice != null ? `${formatMoney(estimatedPrice)} ${item.currency || 'USD'}` : t('common.priceOnRequest');
 
   const title =
-    item.fullModelName?.trim() ||
     `${item.year} ${item.make} ${item.model}${item.trim ? ` ${item.trim}` : ''}`.trim();
 
   const odometer = item.odometerReading != null

@@ -1,7 +1,7 @@
 import { z } from 'zod';
 import { getDb } from '../../db/client';
 import { vehicle } from '../../db/schema';
-import { computeDisplayedPrice, extractBodyTypeRaw, extractEngineVolumeL, buildSlug, normalizeBodyType, normalizeDriveType, normalizeFuelType, normalizeTransmissionType, toPositiveNumberOrNull } from './normalize';
+import { computeDisplayedPrice, buildSlug, normalizeDriveType, normalizeFuelType, normalizeTransmissionType, toPositiveNumberOrNull } from './normalize';
 import { sql } from 'drizzle-orm';
 
 // Мягкая валидация: URL-поля принимаем как строки, фильтруем позже.
@@ -20,12 +20,12 @@ const LotSchema = z.object({
   drive: z.string().optional().nullable(),
   fuel: z.string().optional().nullable(),
   odometer_reading: z.coerce.number().optional().nullable(),
-  odometer: z.string().optional().nullable(),
+  odometer: z.union([z.string(), z.number()]).optional().nullable(),
   buy_it_now_price: z.any().optional().nullable(),
   estimated_retail_value: z.any().optional().nullable(),
   imageUrl: z.string().optional().nullable(),
   images_full: z.array(z.string()).optional().nullable(),
-  build_sheet: z.any().optional().nullable(),
+  images: z.array(z.string()).optional().nullable(),
   category: z.enum(['cars', 'moto', 'water', 'special']).optional().nullable()
 });
 
@@ -50,8 +50,8 @@ export async function importLotsFromJsonText(text: string, mode: ImportMode) {
     return { ok: false, error: 'JSON must be an array of objects' as const };
   }
 
-  const preview = raw.slice(0, 20);
   const normalizedPreview: any[] = [];
+  const skipped: { index: number; externalId?: string; reason: string }[] = [];
   const errors: { index: number; externalId?: string; error: string }[] = [];
 
   const now = new Date().toISOString();
@@ -61,54 +61,48 @@ export async function importLotsFromJsonText(text: string, mode: ImportMode) {
     const obj = raw[i];
     const parsed = LotSchema.safeParse(obj);
     if (!parsed.success) {
-      errors.push({ index: i, error: parsed.error.issues[0]?.message || 'Invalid object' });
+      skipped.push({ index: i, reason: parsed.error.issues[0]?.message || 'Invalid object' });
       continue;
     }
 
     const v = parsed.data;
     const externalId = String(v.lot_number);
 
-    const bsDetails = v.build_sheet?.chromeBuildSheetDetailsVO;
-
-    const resolvedModel = v.model?.trim()
-      || v.full_model_name?.trim()
-      || (typeof bsDetails?.model === 'string' ? bsDetails.model.trim() : '')
-      || '';
+    const resolvedModel = v.model?.trim() || v.full_model_name?.trim() || '';
 
     if (!resolvedModel) {
-      errors.push({ index: i, externalId, error: 'Skipped: could not determine model' });
+      skipped.push({ index: i, externalId, reason: 'could not determine model' });
       continue;
     }
 
-    const resolvedTrim = v.trim?.trim()
-      || (typeof bsDetails?.trim === 'string' ? bsDetails.trim.trim() : '')
-      || null;
+    const resolvedTrim = v.trim?.trim() || null;
 
     const buyItNow = toPositiveNumberOrNull(v.buy_it_now_price);
     const estRetail = toPositiveNumberOrNull(v.estimated_retail_value);
 
     if (!buyItNow && !estRetail) {
-      errors.push({ index: i, externalId, error: 'Skipped: no valid buy_it_now_price or estimated_retail_value' });
+      skipped.push({ index: i, externalId, reason: 'no price' });
       continue;
     }
 
     const displayedPrice = computeDisplayedPrice(buyItNow, estRetail);
 
-    const buildSheet = v.build_sheet ?? null;
-
-    const bodyTypeRaw = extractBodyTypeRaw(buildSheet);
-    const bodyType = normalizeBodyType(bodyTypeRaw);
-
-    const engineVolumeL = extractEngineVolumeL(buildSheet);
+    const bodyTypeRaw = null;
+    const bodyType = null;
+    const engineVolumeL = null;
 
     const fuelType = normalizeFuelType(v.fuel);
     const driveType = normalizeDriveType(v.drive);
     const transmissionType = normalizeTransmissionType(v.transmission);
 
-    const odometerReading = (v.odometer_reading != null && Number.isFinite(v.odometer_reading) && v.odometer_reading > 0)
-      ? Math.round(v.odometer_reading)
-      : null;
-    const odometerUnit = v.odometer
+    const odometerReading = (() => {
+      if (v.odometer_reading != null && Number.isFinite(v.odometer_reading) && v.odometer_reading > 0)
+        return Math.round(v.odometer_reading);
+      if (typeof v.odometer === 'number' && Number.isFinite(v.odometer) && v.odometer > 0)
+        return Math.round(v.odometer);
+      return null;
+    })();
+    const odometerUnit = typeof v.odometer === 'string' && v.odometer
       ? (v.odometer.toLowerCase().includes('km') ? 'km' : 'mi')
       : (odometerReading != null ? 'mi' : null);
 
@@ -117,11 +111,18 @@ export async function importLotsFromJsonText(text: string, mode: ImportMode) {
     const slug = buildSlug(v.year, v.make, resolvedModel, externalId);
 
     // Фильтруем URL-ы: отбрасываем пустые строки и невалидные адреса
-    const validImages = Array.isArray(v.images_full)
-      ? v.images_full.filter(isValidUrl)
-      : [];
+    const rawImages = Array.isArray(v.images_full) && v.images_full.length > 0
+      ? v.images_full
+      : (Array.isArray(v.images) ? v.images : []);
+    const validImages = rawImages.filter(isValidUrl);
     const thumbUrl = isValidUrl(v.imageUrl) ? v.imageUrl : null;
     const itemUrl = isValidUrl(v.item_url) ? v.item_url : null;
+
+    // Пропускаем объект если меньше 4 изображений
+    if (validImages.length < 4) {
+      skipped.push({ index: i, externalId, reason: 'less than 4 images' });
+      continue;
+    }
 
     // Галерея: сначала полноразмерные, иначе миниатюра, иначе пусто
     const gallery = validImages.length > 0
@@ -172,6 +173,7 @@ export async function importLotsFromJsonText(text: string, mode: ImportMode) {
       mode,
       total: raw.length,
       preview: normalizedPreview,
+      skipped,
       errors
     } as const;
   }
@@ -180,7 +182,7 @@ export async function importLotsFromJsonText(text: string, mode: ImportMode) {
   const db = getDb();
   let inserted = 0;
   let updated = 0;
-  let failed = errors.length;
+  let failed = 0;
 
   const upsertSet = {
     slug: sql`excluded.slug`,
@@ -214,7 +216,8 @@ export async function importLotsFromJsonText(text: string, mode: ImportMode) {
   };
 
   // Батчим upsert-запросы, чтобы не перегружать workerd сотнями отдельных вызовов
-  const BATCH_SIZE = 50;
+  // Размер 10 предотвращает чрезмерные коллизии в хэш-таблицах KJ-рантайма workerd
+  const BATCH_SIZE = 10;
 
   for (let batchStart = 0; batchStart < rowsToUpsert.length; batchStart += BATCH_SIZE) {
     const chunk = rowsToUpsert.slice(batchStart, batchStart + BATCH_SIZE);
@@ -228,7 +231,8 @@ export async function importLotsFromJsonText(text: string, mode: ImportMode) {
     try {
       await db.batch(queries as [typeof queries[0], ...typeof queries]);
       inserted += chunk.length;
-    } catch {
+    } catch (batchErr: any) {
+      console.error('[import] batch failed:', batchErr?.message || batchErr);
       // Если батч упал — откатываемся к поштучной вставке для этого чанка
       for (let j = 0; j < chunk.length; j++) {
         try {
@@ -238,6 +242,7 @@ export async function importLotsFromJsonText(text: string, mode: ImportMode) {
             .onConflictDoUpdate({ target: vehicle.externalId, set: upsertSet });
           inserted++;
         } catch (innerE: any) {
+          if (j === 0) console.error('[import] single insert failed:', innerE?.message || innerE);
           failed++;
           errors.push({
             index: batchStart + j,
@@ -256,6 +261,8 @@ export async function importLotsFromJsonText(text: string, mode: ImportMode) {
     processed: rowsToUpsert.length,
     inserted,
     updated,
+    skipped: skipped.length,
+    skippedReasons: skipped.reduce<Record<string, number>>((acc, s) => { acc[s.reason] = (acc[s.reason] ?? 0) + 1; return acc; }, {}),
     failed,
     errors
   } as const;

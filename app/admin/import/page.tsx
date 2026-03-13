@@ -6,11 +6,11 @@ import { useAdminI18n } from '../../../lib/admin-i18n';
 
 type PreviewRes =
   | { ok: false; error: string }
-  | { ok: true; mode: 'preview'; total: number; preview: any[]; errors: any[] };
+  | { ok: true; mode: 'preview'; total: number; preview: any[]; skipped: any[]; errors: any[] };
 
 type ImportRes =
   | { ok: false; error: string }
-  | { ok: true; mode: 'import'; total: number; processed: number; inserted: number; updated: number; failed: number; errors: any[] };
+  | { ok: true; mode: 'import'; total: number; processed: number; inserted: number; updated: number; skipped: number; skippedReasons: Record<string, number>; failed: number; errors: any[] };
 
 export default function AdminImportPage() {
   const { t } = useAdminI18n();
@@ -118,8 +118,13 @@ export default function AdminImportPage() {
               {'ok' in report && report.ok ? (
                 <>
                   <P style={{ marginTop: 8 }}>
-                    {t('import.processed')}: {report.processed} · {t('import.inserted')}: {report.inserted} · {t('import.failed')}: {report.failed}
+                    {t('import.total')}: {report.total} · {t('import.inserted')}: {report.inserted} · {t('import.skipped')}: {report.skipped} · {t('import.failed')}: {report.failed}
                   </P>
+                  {report.skipped > 0 && report.skippedReasons && (
+                    <P style={{ marginTop: 6, fontSize: 13, color: 'var(--muted)' }}>
+                      {t('import.skipped')}: {Object.entries(report.skippedReasons).map(([reason, count]) => `${reason}: ${count}`).join(' · ')}
+                    </P>
+                  )}
                   {report.errors?.length ? (
                     <>
                       <Hr />

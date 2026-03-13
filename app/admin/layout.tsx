@@ -1,60 +1,33 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import styled from 'styled-components';
 import { Container } from '../../components/ui';
-import { AdminI18nProvider, useAdminI18n, type AdminLocale } from '../../lib/admin-i18n';
+import { AdminI18nProvider, useAdminI18n } from '../../lib/admin-i18n';
+import LangSwitcher from '../../components/LangSwitcher';
 
-const Wrap = styled.div`
-  min-height: 100vh;
-  padding: 28px 0 60px;
+const HeaderWrap = styled.header`
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.8);
+  border-bottom: 1px solid var(--border);
 `;
 
-const Top = styled.div`
+const Row = styled.div`
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  gap: 14px;
-  margin-bottom: 18px;
-  flex-wrap: wrap;
+  padding: 14px 0;
+  gap: 16px;
 `;
 
-const Nav = styled.nav`
+const Left = styled.div`
   display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
   align-items: center;
-
-  a {
-    padding: 8px 10px;
-    border-radius: 10px;
-    border: 1px solid var(--border);
-    background: #F8FAFC;
-    color: var(--muted);
-    transition: color 120ms, border-color 120ms;
-  }
-  a:hover { color: var(--text); border-color: #FF6B35; }
-`;
-
-const LangWrap = styled.div`
-  display: flex;
-  gap: 4px;
-  padding: 3px;
-  border: 1px solid var(--border);
-  border-radius: 999px;
-  background: #F8FAFC;
-`;
-
-const LangBtn = styled.button<{ $active?: boolean }>`
-  padding: 5px 9px;
-  border-radius: 999px;
-  border: none;
-  font-size: 12px;
-  font-weight: 700;
-  cursor: pointer;
-  color: ${(p) => (p.$active ? '#FFFFFF' : 'var(--muted)')};
-  background: ${(p) => (p.$active ? 'var(--accent)' : 'transparent')};
-  transition: color 120ms, background 120ms;
+  gap: 12px;
 `;
 
 const BackLink = styled(Link)`
@@ -73,43 +46,90 @@ const BackLink = styled(Link)`
   }
 `;
 
+const Brand = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 900;
+`;
+
+const Dot = styled.span`
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--accent);
+  display: inline-block;
+`;
+
+const Nav = styled.nav`
+  display: flex;
+  gap: 12px;
+  align-items: center;
+
+  a {
+    color: var(--muted);
+    padding: 8px 10px;
+    border-radius: 10px;
+    border: 1px solid transparent;
+    transition: color 120ms ease, background 120ms ease, border-color 120ms ease;
+  }
+
+  a:hover {
+    color: var(--text);
+    border-color: var(--border);
+    background: var(--hover-bg);
+  }
+
+  a.active {
+    color: var(--text);
+    border-color: var(--border);
+    background: var(--hover-bg);
+  }
+`;
+
+
+const PageWrap = styled.div`
+  min-height: 100vh;
+  padding: 28px 0 60px;
+`;
+
 function AdminBar({ children }: { children: React.ReactNode }) {
   const { locale, setLocale, t } = useAdminI18n();
-  const langs: AdminLocale[] = ['ge', 'ru', 'en'];
+  const pathname = usePathname();
 
   return (
-    <Wrap>
-      <Container>
-        <Top>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-            <div style={{ fontWeight: 900, display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ width: 10, height: 10, borderRadius: 999, background: 'var(--accent)' }} />
-              Admin
-            </div>
-            <LangWrap>
-              {langs.map((l) => (
-                <LangBtn key={l} $active={locale === l} onClick={() => setLocale(l)}>
-                  {l.toUpperCase()}
-                </LangBtn>
-              ))}
-            </LangWrap>
-          </div>
+    <>
+      <HeaderWrap>
+        <Container>
+          <Row>
+            <Left>
+              <BackLink href={`/${locale}`}>← {t('nav.backToSite')}</BackLink>
+              <Brand>
+                <Dot />
+                Admin
+              </Brand>
+            </Left>
 
-          <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
             <Nav>
-              <Link href="/admin/import">{t('nav.import')}</Link>
-              <Link href="/admin/leads">{t('nav.leads')}</Link>
-              <Link href="/admin/offices">{t('nav.offices')}</Link>
+              <Link href="/admin/import" className={pathname?.startsWith('/admin/import') ? 'active' : ''}>{t('nav.import')}</Link>
+              <Link href="/admin/leads" className={pathname?.startsWith('/admin/leads') ? 'active' : ''}>{t('nav.leads')}</Link>
+              <Link href="/admin/offices" className={pathname?.startsWith('/admin/offices') ? 'active' : ''}>{t('nav.offices')}</Link>
             </Nav>
-            <BackLink href={`/${locale}`}>
-              ← {t('nav.backToSite')}
-            </BackLink>
-          </div>
-        </Top>
 
-        {children}
-      </Container>
-    </Wrap>
+            <LangSwitcher items={[
+              { label: 'GE', active: locale === 'ge', onClick: () => setLocale('ge') },
+              { label: 'RU', active: locale === 'ru', onClick: () => setLocale('ru') },
+              { label: 'EN', active: locale === 'en', onClick: () => setLocale('en') },
+            ]} />
+          </Row>
+        </Container>
+      </HeaderWrap>
+      <PageWrap>
+        <Container>
+          {children}
+        </Container>
+      </PageWrap>
+    </>
   );
 }
 
