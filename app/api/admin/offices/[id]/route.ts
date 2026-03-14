@@ -10,7 +10,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     const id = Number(params.id);
     if (!Number.isFinite(id)) return NextResponse.json({ error: 'invalid id' }, { status: 400 });
 
-    const body = await req.json();
+    const body = await req.json() as { city?: string; phone?: string; address?: string; sortOrder?: number };
     const updates: Record<string, any> = { updatedAt: new Date().toISOString() };
 
     if (body.city !== undefined) updates.city = body.city.trim();

@@ -33,7 +33,7 @@ export default function AdminOfficesPage() {
     setLoading(true);
     try {
       const res = await fetch('/api/admin/offices');
-      const data = await res.json();
+      const data = await res.json() as { rows?: Office[] };
       setItems(data.rows || []);
     } finally {
       setLoading(false);
@@ -55,7 +55,7 @@ export default function AdminOfficesPage() {
       setMsg(t('offices.added'));
       load();
     } else {
-      const d = await res.json().catch(() => ({}));
+      const d = await res.json().catch(() => ({} as { error?: string })) as { error?: string };
       setMsg(d?.error || 'Failed');
     }
   }
@@ -73,7 +73,7 @@ export default function AdminOfficesPage() {
       setMsg(t('offices.saved'));
       load();
     } else {
-      const d = await res.json().catch(() => ({}));
+      const d = await res.json().catch(() => ({} as { error?: string })) as { error?: string };
       setMsg(d?.error || 'Failed');
     }
   }

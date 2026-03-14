@@ -1,5 +1,6 @@
 import { drizzle } from 'drizzle-orm/d1';
 import { getRequestContext } from '@cloudflare/next-on-pages';
+import type { D1Database } from '@cloudflare/workers-types';
 import * as schema from './schema';
 
 export function getDb() {

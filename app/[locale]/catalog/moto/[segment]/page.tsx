@@ -2,7 +2,8 @@ export const runtime = 'edge';
 
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Locale } from '../../../../../lib/i18n/routing';
-import { Grid, H2, P } from '../../../../../components/ui';
+import { Suspense } from 'react';
+import { Grid, H2, P, Card, CardBody } from '../../../../../components/ui';
 import Pagination from '../../../../../components/Pagination';
 import LotCard from '../../../../../components/LotCard';
 import { listVehicles } from '../../../../../lib/server/vehicles';
@@ -58,6 +59,13 @@ export default async function MotoSegmentPage({
       <P style={{ marginTop: 8 }}>{t('catalog.motoSegmentSub', { segment: segmentLabel })}</P>
       <div style={{ height: 16 }} />
 
+      {data.total === 0 && (
+        <Card>
+          <CardBody>
+            <P style={{ color: 'var(--muted)', margin: 0 }}>{t('common.noResults')}</P>
+          </CardBody>
+        </Card>
+      )}
       <Grid>
         {data.rows.map((it) => (
           <div key={it.id} style={{ gridColumn: 'span 4' }}>
@@ -75,7 +83,7 @@ export default async function MotoSegmentPage({
         ))}
       </Grid>
 
-      <Pagination total={data.total} page={data.page} pageSize={data.pageSize} />
+      <Suspense fallback={null}><Pagination total={data.total} page={data.page} pageSize={data.pageSize} /></Suspense>
     </div>
   );
 }

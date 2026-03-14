@@ -6,7 +6,7 @@ export type VehicleFilters = {
   category?: 'cars' | 'moto' | 'water' | 'special';
   priceMin?: number;
   priceMax?: number;
-  make?: string;
+  make?: string[];
   model?: string;
   yearMin?: number;
   yearMax?: number;
@@ -20,7 +20,7 @@ export type VehicleFilters = {
   q?: string;
 };
 
-export type VehicleSort = 'newest' | 'price_asc' | 'price_desc' | 'year_desc' | 'engine_desc';
+export type VehicleSort = 'newest' | 'price_asc' | 'price_desc' | 'year_asc' | 'year_desc' | 'engine_desc';
 
 export async function listVehicles(opts: {
   filters: VehicleFilters;
@@ -91,7 +91,7 @@ function buildWhere(f: VehicleFilters) {
   const where = [];
 
   if (f.category) where.push(eq(vehicle.category, f.category));
-  if (f.make) where.push(eq(vehicle.make, f.make));
+  if (f.make?.length) where.push(inArray(vehicle.make, f.make));
   if (f.model) where.push(eq(vehicle.model, f.model));
   if (f.color) where.push(eq(vehicle.color, f.color));
   if (typeof f.priceMin === 'number') where.push(gte(vehicle.displayedPrice, f.priceMin));
@@ -122,6 +122,8 @@ function buildOrderBy(sort: VehicleSort) {
       return [asc(vehicle.displayedPrice), desc(vehicle.updatedAt)];
     case 'price_desc':
       return [desc(vehicle.displayedPrice), desc(vehicle.updatedAt)];
+    case 'year_asc':
+      return [asc(vehicle.year), desc(vehicle.updatedAt)];
     case 'year_desc':
       return [desc(vehicle.year), desc(vehicle.updatedAt)];
     case 'engine_desc':

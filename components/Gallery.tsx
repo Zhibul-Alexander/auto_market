@@ -53,6 +53,11 @@ const MainSlider = styled.div`
     border-radius: 50%;
     backdrop-filter: blur(4px);
     transition: background 150ms ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    --swiper-navigation-size: 16px;
   }
   .swiper-button-prev:hover,
   .swiper-button-next:hover {
@@ -62,6 +67,7 @@ const MainSlider = styled.div`
   .swiper-button-next::after {
     font-size: 16px;
     font-weight: 900;
+    line-height: 1;
   }
 
   .swiper-pagination-bullet {

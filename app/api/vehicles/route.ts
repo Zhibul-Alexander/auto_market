@@ -20,9 +20,8 @@ const QuerySchema = z.object({
   transmissionType: z.string().optional(),
   color: z.string().optional(),
   q: z.string().optional(),
-  sort: z.enum(['newest', 'price_asc', 'price_desc', 'year_desc', 'engine_desc']).optional(),
-  page: z.coerce.number().optional(),
-  pageSize: z.coerce.number().optional()
+  sort: z.enum(['newest', 'price_asc', 'price_desc', 'year_asc', 'year_desc', 'engine_desc']).optional(),
+  page: z.coerce.number().optional()
 });
 
 function splitList(v?: string) {
@@ -40,7 +39,7 @@ export async function GET(req: NextRequest) {
   }
 
   const q = parsed.data;
-  const pageSize = [30, 60, 90].includes(q.pageSize ?? 30) ? (q.pageSize ?? 30) : 30;
+  const pageSize = 50;
   const page = Math.max(1, q.page ?? 1);
 
   const data = await listVehicles({
@@ -48,7 +47,7 @@ export async function GET(req: NextRequest) {
       category: q.category,
       priceMin: q.priceMin,
       priceMax: q.priceMax,
-      make: q.make ? q.make.toUpperCase() : undefined,
+      make: splitList(q.make)?.map((m) => m.toUpperCase()),
       model: q.model ? q.model.toUpperCase() : undefined,
       yearMin: q.yearMin,
       yearMax: q.yearMax,

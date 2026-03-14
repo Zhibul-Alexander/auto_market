@@ -73,15 +73,19 @@ const Right = styled.div`
 
 
 function replaceLocale(pathname: string, newLocale: Locale): string {
-  const parts = pathname.split('?')[0].split('/').filter(Boolean);
-  if (parts.length === 0) return `/${newLocale}`;
-  const first = parts[0];
+  const [path, qs] = pathname.split('?') as [string, string | undefined];
+  const parts = path.split('/').filter(Boolean);
   const known: Locale[] = ['ge', 'ru', 'en'];
-  if ((known as string[]).includes(first)) {
+  let newPath: string;
+  if (parts.length === 0) {
+    newPath = `/${newLocale}`;
+  } else if ((known as string[]).includes(parts[0]!)) {
     parts[0] = newLocale;
-    return '/' + parts.join('/');
+    newPath = '/' + parts.join('/');
+  } else {
+    newPath = `/${newLocale}/` + parts.join('/');
   }
-  return `/${newLocale}/` + parts.join('/');
+  return qs ? `${newPath}?${qs}` : newPath;
 }
 
 export default function Header({ locale }: { locale: Locale }) {

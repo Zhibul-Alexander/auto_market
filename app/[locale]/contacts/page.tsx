@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Locale } from '../../../lib/i18n/routing';
 import { Grid, H2, P, Card, CardBody, Badge, Hr } from '../../../components/ui';
@@ -29,9 +30,7 @@ export default async function ContactsPage({ params }: { params: { locale: Local
           </Card>
 
           <div style={{ height: 20 }} />
-          <H2>{t('contacts.offices')}</H2>
-          <div style={{ height: 12 }} />
-          <OfficesList />
+          <OfficesList title={t('contacts.offices')} />
         </div>
 
         <div style={{ gridColumn: 'span 5' }}>

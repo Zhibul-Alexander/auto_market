@@ -37,31 +37,31 @@ export function normalizeBodyType(raw: unknown): BodyType {
 
 export function normalizeFuelType(raw: unknown): FuelType {
   if (!raw) return null;
-  const s = String(raw).toUpperCase();
-  if (s.includes('ELECTRIC')) return 'electric';
-  if (s.includes('HYBRID')) return 'hybrid';
-  if (s.includes('DIESEL')) return 'diesel';
-  if (s.includes('GAS') || s.includes('GASOLINE')) return 'gas';
+  const s = String(raw).toLowerCase();
+  if (s.includes('hybrid')) return 'hybrid';
+  if (s.includes('electric')) return 'electric';
+  if (s.includes('diesel')) return 'diesel';
+  if (s.includes('gas') || s.includes('gasoline') || s.includes('flexible')) return 'gas';
   return 'other';
 }
 
 export function normalizeDriveType(raw: unknown): DriveType {
   if (!raw) return null;
-  const s = String(raw);
-  const u = s.toUpperCase();
-  if (u.includes('AWD')) return 'awd';
-  if (u.includes('4WD') || u.includes('4X4')) return '4wd';
-  if (u.includes('FRONT')) return 'fwd';
-  if (u.includes('REAR')) return 'rwd';
+  const s = String(raw).toLowerCase();
+  if (s.includes('awd') || s.includes('all wheel') || s.includes('all-wheel')) return 'awd';
+  if ((s.includes('4wd') || s.includes('4x4')) && (s.includes('wheel') || s.includes('whl'))) return 'awd';
+  if (s.includes('4wd') || s.includes('4x4')) return '4wd';
+  if (s.includes('front')) return 'fwd';
+  if (s.includes('rear')) return 'rwd';
   return 'other';
 }
 
 export function normalizeTransmissionType(raw: unknown): TransmissionType {
   if (!raw) return null;
-  const u = String(raw).toUpperCase();
-  if (u.includes('CVT')) return 'cvt';
-  if (u.includes('MANUAL')) return 'manual';
-  if (u.includes('AUTO')) return 'automatic';
+  const s = String(raw).toLowerCase();
+  if (s.includes('cvt')) return 'cvt';
+  if (s.includes('manual')) return 'manual';
+  if (s.includes('auto')) return 'automatic';
   return 'other';
 }
 

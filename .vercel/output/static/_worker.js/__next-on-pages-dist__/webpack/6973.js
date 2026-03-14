@@ -1,0 +1,1 @@
+var n={},b=(g,m,p)=>(n.__chunk_6973=(u,o,s)=>{"use strict";s.d(o,{Z:()=>_});var r=s(7908),l=s(8853),i=s(7417),_=(0,r.cache)(async function(e){let t,a;typeof e=="string"?t=e:e&&(a=e.locale,t=e.namespace);let c=await(0,i.Z)(a);return(0,l.eX)({...c,namespace:t,messages:c.messages})})},n);export{b as __getNamedExports};

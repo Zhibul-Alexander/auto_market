@@ -33,7 +33,7 @@ export default function TrackingForm({ locale }: { locale: string }) {
 
     try {
       const res = await fetch(`/api/tracking?vin=${encodeURIComponent(vin.trim().toUpperCase())}`);
-      const data = await res.json().catch(() => ({}));
+      const data = await res.json().catch(() => ({} as { error?: string; events?: any[] })) as { error?: string; events?: any[] };
       if (!res.ok) throw new Error(data?.error || 'Request failed');
 
       setEvents(data.events || []);

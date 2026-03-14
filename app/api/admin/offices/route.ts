@@ -17,7 +17,7 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const body = await req.json() as { city?: string; phone?: string; address?: string; sortOrder?: number };
     const { city, phone, address, sortOrder } = body;
 
     if (!city || !phone) {

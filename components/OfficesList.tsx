@@ -24,12 +24,12 @@ const PhoneLink = styled.a`
   &:hover { text-decoration: underline; }
 `;
 
-export default function OfficesList() {
+export default function OfficesList({ title }: { title?: string }) {
   const [offices, setOffices] = useState<Office[]>([]);
 
   useEffect(() => {
     fetch('/api/offices')
-      .then((r) => r.json())
+      .then((r) => r.json() as Promise<{ rows?: Office[] }>)
       .then((d) => setOffices(d.rows || []))
       .catch(() => {});
   }, []);
@@ -37,16 +37,19 @@ export default function OfficesList() {
   if (!offices.length) return null;
 
   return (
-    <OfficeGrid>
-      {offices.map((o) => (
-        <Card key={o.id}>
-          <CardBody>
-            <div style={{ fontWeight: 800, marginBottom: 6 }}>{o.city}</div>
-            <PhoneLink href={`tel:${o.phone.replace(/\s/g, '')}`}>{o.phone}</PhoneLink>
-            {o.address ? <P style={{ marginTop: 6, fontSize: 13 }}>{o.address}</P> : null}
-          </CardBody>
-        </Card>
-      ))}
-    </OfficeGrid>
+    <>
+      {title && <h2 style={{ fontSize: '1.25rem', fontWeight: 800, marginBottom: 12 }}>{title}</h2>}
+      <OfficeGrid>
+        {offices.map((o) => (
+          <Card key={o.id}>
+            <CardBody>
+              <div style={{ fontWeight: 800, marginBottom: 6 }}>{o.city}</div>
+              <PhoneLink href={`tel:${o.phone.replace(/\s/g, '')}`}>{o.phone}</PhoneLink>
+              {o.address ? <P style={{ marginTop: 6, fontSize: 13 }}>{o.address}</P> : null}
+            </CardBody>
+          </Card>
+        ))}
+      </OfficeGrid>
+    </>
   );
 }

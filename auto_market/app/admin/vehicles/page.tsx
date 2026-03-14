@@ -32,7 +32,7 @@ export default function AdminVehiclesPage() {
     setLoading(true);
     try {
       const res = await fetch(`/api/vehicles?${query}`);
-      const data = await res.json();
+      const data = await res.json() as { items?: Item[] };
       setItems(data.items || []);
     } finally {
       setLoading(false);

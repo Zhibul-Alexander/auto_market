@@ -4,7 +4,6 @@ import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Locale } from '../../../../lib/i18n/routing';
 import { getVehicleBySlug, listSimilarVehicles } from '../../../../lib/server/vehicles';
-import { maskVin } from '../../../../lib/server/normalize';
 import Gallery from '../../../../components/Gallery';
 import LeadForm from '../../../../components/LeadForm';
 import LotCard from '../../../../components/LotCard';
@@ -49,6 +48,40 @@ export default async function LotDetail({ params }: { params: { locale: Locale; 
   const title = v.fullModelName?.trim() || `${v.year} ${v.make} ${v.model}${v.trim ? ` ${v.trim}` : ''}`.trim();
   const price = v.displayedPrice != null ? `${formatMoney(v.displayedPrice)} ${v.currency || 'USD'}` : t('common.priceOnRequest');
 
+  const bodyLabel = (() => {
+    const map: Record<string, string> = {
+      sedan: t('common.bodySedan'), hatchback: t('common.bodyHatchback'),
+      crossover: t('common.bodySuv'), coupe: t('common.bodyCoupe'),
+      minivan: t('common.bodyMinivan'), pickup: t('common.bodyPickup'),
+      convertible: t('common.bodyConvertible'), sport: t('common.bodySport'),
+      wagon: t('common.bodyWagon'),
+    };
+    return (v.bodyType && map[v.bodyType]) || v.bodyTypeRaw || null;
+  })();
+
+  const fuelLabel = (() => {
+    const map: Record<string, string> = {
+      gas: t('common.fuelGas'), diesel: t('common.fuelDiesel'),
+      hybrid: t('common.fuelHybrid'), electric: t('common.fuelElectric'),
+    };
+    return (v.fuelType && map[v.fuelType]) || v.fuelRaw || null;
+  })();
+
+  const driveLabel = (() => {
+    const map: Record<string, string> = {
+      fwd: t('common.driveFwd'), rwd: t('common.driveRwd'),
+      awd: t('common.driveAwd'), '4wd': t('common.driveAwd'),
+    };
+    return (v.driveType && map[v.driveType]) || v.driveRaw || null;
+  })();
+
+  const transLabel = (() => {
+    const map: Record<string, string> = {
+      automatic: t('common.transAuto'), manual: t('common.transManual'),
+    };
+    return (v.transmissionType && map[v.transmissionType]) || v.transmissionRaw || null;
+  })();
+
   let similar: any[] = [];
   try {
     similar = await listSimilarVehicles({
@@ -65,8 +98,6 @@ export default async function LotDetail({ params }: { params: { locale: Locale; 
   return (
     <div>
       <H1 style={{ fontSize: 34 }}>{title}</H1>
-      <P style={{ marginTop: 8 }}>{t('lot.subtitle', { id: v.externalId })}</P>
-
       <div style={{ height: 14 }} />
 
       <Gallery images={gallery} />
@@ -83,9 +114,9 @@ export default async function LotDetail({ params }: { params: { locale: Locale; 
                   <div style={{ fontSize: 26, fontWeight: 700, marginTop: 8, color: '#FF6B35' }}>{price}</div>
                 </div>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', flexWrap: 'wrap' }}>
-                  {v.bodyType ? <Badge>{v.bodyType}</Badge> : null}
+                  {bodyLabel ? <Badge>{bodyLabel}</Badge> : null}
                   {v.engineVolumeL ? <Badge>{v.engineVolumeL.toFixed(1)}L</Badge> : null}
-                  {v.fuelType ? <Badge>{v.fuelType}</Badge> : null}
+                  {fuelLabel ? <Badge>{fuelLabel}</Badge> : null}
                 </div>
               </div>
 
@@ -93,56 +124,51 @@ export default async function LotDetail({ params }: { params: { locale: Locale; 
 
               <SpecGrid>
                 <Spec label={t('lot.specs.year')} value={String(v.year)} />
-                <Spec label={t('lot.specs.body')} value={v.bodyTypeRaw || v.bodyType || '—'} />
+                <Spec label={t('lot.specs.body')} value={bodyLabel || '—'} />
                 <Spec label={t('lot.specs.engine')} value={v.engineVolumeL ? `${v.engineVolumeL.toFixed(1)}L` : '—'} />
-                <Spec label={t('lot.specs.fuel')} value={v.fuelRaw || v.fuelType || '—'} />
-                <Spec label={t('lot.specs.drive')} value={v.driveRaw || v.driveType || '—'} />
-                <Spec label={t('lot.specs.transmission')} value={v.transmissionRaw || v.transmissionType || '—'} />
+                <Spec label={t('lot.specs.fuel')} value={fuelLabel || '—'} />
+                <Spec label={t('lot.specs.drive')} value={driveLabel || '—'} />
+                <Spec label={t('lot.specs.transmission')} value={transLabel || '—'} />
                 <Spec label={t('lot.specs.color')} value={v.color || '—'} />
-                <Spec label={t('lot.specs.vin')} value={maskVin(v.vin) || '—'} />
+                <Spec label={t('lot.specs.vin')} value={v.vin || '—'} />
               </SpecGrid>
 
-              {v.itemUrl ? (
-                <>
-                  <Hr />
-                  <Link href={v.itemUrl} target="_blank" style={{ color: 'var(--accent)' }}>
-                    {t('lot.sourceLink')}
-                  </Link>
-                </>
-              ) : null}
             </CardBody>
           </Card>
 
-          <div style={{ height: 18 }} />
-
-          <H2>{t('lot.similar')}</H2>
-          <div style={{ height: 12 }} />
-          <Grid>
-            {similar.map((it) => (
-              <div key={it.id} style={{ gridColumn: 'span 4' }}>
-                <LotCard
-                  locale={params.locale}
-                  item={{
-                    slug: it.slug,
-                    year: it.year,
-                    make: it.make,
-                    model: it.model,
-                    trim: it.trim,
-                    fullModelName: it.fullModelName,
-                    thumbUrl: it.thumbUrl,
-                    bodyType: it.bodyType,
-                    engineVolumeL: it.engineVolumeL,
-                    odometerReading: it.odometerReading,
-                    odometerUnit: it.odometerUnit,
-                    driveType: it.driveType,
-                    fuelType: it.fuelType,
-                    displayedPrice: it.displayedPrice,
-                    currency: it.currency
-                  }}
-                />
-              </div>
-            ))}
-          </Grid>
+          {similar.length > 0 && (
+            <>
+              <div style={{ height: 18 }} />
+              <H2>{t('lot.similar')}</H2>
+              <div style={{ height: 12 }} />
+              <Grid>
+                {similar.map((it) => (
+                  <div key={it.id} style={{ gridColumn: 'span 4' }}>
+                    <LotCard
+                      locale={params.locale}
+                      item={{
+                        slug: it.slug,
+                        year: it.year,
+                        make: it.make,
+                        model: it.model,
+                        trim: it.trim,
+                        fullModelName: it.fullModelName,
+                        thumbUrl: it.thumbUrl,
+                        bodyType: it.bodyType,
+                        engineVolumeL: it.engineVolumeL,
+                        odometerReading: it.odometerReading,
+                        odometerUnit: it.odometerUnit,
+                        driveType: it.driveType,
+                        fuelType: it.fuelType,
+                        displayedPrice: it.displayedPrice,
+                        currency: it.currency
+                      }}
+                    />
+                  </div>
+                ))}
+              </Grid>
+            </>
+          )}
         </div>
 
         <div style={{ gridColumn: 'span 4' }}>

@@ -1,0 +1,1 @@
+var e={},c=(r,a,l)=>(e.__chunk_3487=(_,s,t)=>{"use strict";t.d(s,{Z:()=>o});let o=(0,t(8264).D)(String.raw`/Users/azhybul/workspace/auto_market/components/LotCard.tsx#default`)},e);export{c as __getNamedExports};

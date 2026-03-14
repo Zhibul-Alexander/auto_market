@@ -92,7 +92,7 @@ function replaceLocale(pathname: string, newLocale: Locale): string {
   if (parts.length === 0) return `/${newLocale}`;
   // if first segment is locale, replace; otherwise prepend
   const first = parts[0];
-  const known: Locale[] = ['ka', 'ru', 'en'];
+  const known: Locale[] = ['ge', 'ru', 'en'];
   if ((known as string[]).includes(first)) {
     parts[0] = newLocale;
     return '/' + parts.join('/');
@@ -132,7 +132,7 @@ export default function Header({ locale }: { locale: Locale }) {
 
           <Right>
             <Lang aria-label="Language switcher">
-              <LangLink href={mk('ka')} $active={locale === 'ka'}>KA</LangLink>
+              <LangLink href={mk('ge')} $active={locale === 'ge'}>KA</LangLink>
               <LangLink href={mk('ru')} $active={locale === 'ru'}>RU</LangLink>
               <LangLink href={mk('en')} $active={locale === 'en'}>EN</LangLink>
             </Lang>

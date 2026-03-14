@@ -30,7 +30,7 @@ export default function AdminLoginPage() {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ password })
       });
-      const data = await res.json().catch(() => ({}));
+      const data = await res.json().catch(() => ({} as { error?: string })) as { error?: string };
       if (!res.ok) throw new Error(data?.error || 'Login failed');
       router.push(next);
     } catch (err: any) {

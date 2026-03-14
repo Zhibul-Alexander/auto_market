@@ -1,0 +1,1 @@
+var a={},t=(_,e,s)=>(a.__NEXT_FONT_MANIFEST=_.__NEXT_FONT_MANIFEST='{"pages":{},"app":{"/Users/azhybul/workspace/auto_market/app/layout":["static/media/21350d82a1f187e9-s.p.woff2","static/media/e4af272ccee01ff0-s.p.woff2"]},"appUsingSizeAdjust":true,"pagesUsingSizeAdjust":false}',a.__REACT_LOADABLE_MANIFEST=_.__REACT_LOADABLE_MANIFEST="{}",a);export{t as __getNamedExports};

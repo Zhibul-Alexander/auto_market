@@ -87,8 +87,8 @@ export default function LeadForm(props: {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify(payload)
       });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(data?.error || 'Request failed');
+      const data = await res.json().catch(() => ({} as { error?: string })) as { error?: string };
+      if (!res.ok) throw new globalThis.Error(data?.error || 'Request failed');
       setOk(true);
       setName('');
       setPhone('');

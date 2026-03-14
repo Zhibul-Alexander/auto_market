@@ -41,7 +41,7 @@ export default function AdminLeadsPage() {
     setMsg(null);
     try {
       const res = await fetch(`/api/admin/leads?${query}`);
-      const data = await res.json();
+      const data = await res.json() as { rows?: Lead[] };
       setItems(data.rows || []);
     } finally {
       setLoading(false);
@@ -64,7 +64,7 @@ export default function AdminLeadsPage() {
       setItems((prev) => prev.map((l) => (l.id === id ? { ...l, status: next } : l)));
       if (selected?.id === id) setSelected({ ...(selected as Lead), status: next });
     } else {
-      const data = await res.json().catch(() => ({}));
+      const data = await res.json().catch(() => ({} as { error?: string })) as { error?: string };
       setMsg(data?.error || 'Update failed');
     }
   }
@@ -82,7 +82,7 @@ export default function AdminLeadsPage() {
       setSelected({ ...selected, note });
       setMsg('Saved.');
     } else {
-      const data = await res.json().catch(() => ({}));
+      const data = await res.json().catch(() => ({} as { error?: string })) as { error?: string };
       setMsg(data?.error || 'Save failed');
     }
   }

@@ -2,7 +2,8 @@ export const runtime = 'edge';
 
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Locale } from '../../../../../lib/i18n/routing';
-import { Grid, H2, P } from '../../../../../components/ui';
+import { Suspense } from 'react';
+import { Grid, H2, P, Card, CardBody } from '../../../../../components/ui';
 import FiltersPanel from '../../../../../components/FiltersPanel';
 import Pagination from '../../../../../components/Pagination';
 import LotCard from '../../../../../components/LotCard';
@@ -52,8 +53,7 @@ export default async function CarsSegmentPage({
   const bodyPreset = segmentToBody[params.segment] || 'other';
 
   const page = Math.max(1, asNum(searchParams.page) ?? 1);
-  const pageSizeRaw = asNum(searchParams.pageSize) ?? 30;
-  const pageSize = [30, 60, 90].includes(pageSizeRaw) ? pageSizeRaw : 30;
+  const pageSize = 50;
   const sort = (asStr(searchParams.sort) as any) || 'newest';
 
   const list = asList(searchParams.bodyType);
@@ -64,7 +64,7 @@ export default async function CarsSegmentPage({
     data = await listVehicles({
       filters: {
         category: 'cars',
-        make: asStr(searchParams.make)?.toUpperCase(),
+        make: asList(searchParams.make)?.map((m) => m.toUpperCase()),
         model: asStr(searchParams.model)?.toUpperCase(),
         priceMin: asNum(searchParams.priceMin),
         priceMax: asNum(searchParams.priceMax),
@@ -94,9 +94,16 @@ export default async function CarsSegmentPage({
 
       <Grid>
         <div style={{ gridColumn: 'span 4' }}>
-          <FiltersPanel total={data.total} />
+          <Suspense fallback={null}><FiltersPanel total={data.total} /></Suspense>
         </div>
         <div style={{ gridColumn: 'span 8' }}>
+          {data.total === 0 && (
+            <Card>
+              <CardBody>
+                <P style={{ color: 'var(--muted)', margin: 0 }}>{t('common.noResults')}</P>
+              </CardBody>
+            </Card>
+          )}
           <Grid>
             {data.rows.map((it) => (
               <div key={it.id} style={{ gridColumn: 'span 6' }}>
@@ -124,7 +131,7 @@ export default async function CarsSegmentPage({
             ))}
           </Grid>
 
-          <Pagination total={data.total} page={data.page} pageSize={data.pageSize} />
+          <Suspense fallback={null}><Pagination total={data.total} page={data.page} pageSize={data.pageSize} /></Suspense>
         </div>
       </Grid>
     </div>

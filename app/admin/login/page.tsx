@@ -1,7 +1,7 @@
 'use client';
 
 import { useSearchParams, useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import styled from 'styled-components';
 import { Button, Card, CardBody, Input, H2, P, Container } from '../../../components/ui';
 import { useAdminI18n } from '../../../lib/admin-i18n';
@@ -13,6 +13,14 @@ const Center = styled.div`
 `;
 
 export default function AdminLoginPage() {
+  return (
+    <Suspense fallback={null}>
+      <AdminLoginForm />
+    </Suspense>
+  );
+}
+
+function AdminLoginForm() {
   const { t } = useAdminI18n();
   const sp = useSearchParams();
   const router = useRouter();
@@ -32,7 +40,7 @@ export default function AdminLoginPage() {
         headers: { 'content-type': 'application/json' },
         body: JSON.stringify({ password })
       });
-      const data = await res.json().catch(() => ({}));
+      const data = await res.json().catch(() => ({} as { error?: string })) as { error?: string };
       if (!res.ok) throw new Error(data?.error || 'Login failed');
       router.push(next);
     } catch (err: any) {

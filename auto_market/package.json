@@ -10,7 +10,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "node scripts/migrate.mjs",
-    "pages:preview": "npx @cloudflare/next-on-pages@1"
+    "pages:preview": "npx @cloudflare/next-on-pages@1",
+    "dev:cf": "npx @cloudflare/next-on-pages@1 && wrangler pages dev .vercel/output/static"
   },
   "dependencies": {
     "next": "14.2.5",

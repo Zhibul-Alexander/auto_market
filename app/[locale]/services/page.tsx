@@ -1,3 +1,4 @@
+export const runtime = 'edge';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Locale } from '../../../lib/i18n/routing';
 import Link from 'next/link';
