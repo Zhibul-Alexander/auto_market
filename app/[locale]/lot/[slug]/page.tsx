@@ -10,19 +10,29 @@ import LotCard from '../../../../components/LotCard';
 import { H1, H2, P, Card, CardBody, Badge, Hr, LotPageGrid, CardsGrid, LotSpecGrid, LotPrice } from '../../../../components/ui';
 import Link from 'next/link';
 import { Metadata } from 'next';
+import { locales } from '../../../../lib/i18n/routing';
 
 export async function generateMetadata({ params }: { params: { locale: Locale; slug: string } }): Promise<Metadata> {
   try {
     const v = await getVehicleBySlug(params.slug);
     if (!v) return {};
     const title = v.fullModelName?.trim() || `${v.year} ${v.make} ${v.model}${v.trim ? ` ${v.trim}` : ''}`.trim();
-    const desc = `Lot ${v.externalId} · ${v.make} ${v.model} · Auto Market`;
+    const desc = `${v.year} ${v.make} ${v.model}${v.trim ? ` ${v.trim}` : ''} — lot ${v.externalId}. Buy directly from US auction. Delivery and customs clearance to Georgia. Auto Market.`;
+    const images = v.thumbUrl ? [{ url: v.thumbUrl }] : undefined;
     return {
       title,
       description: desc,
+      openGraph: {
+        title,
+        description: desc,
+        type: 'website',
+        images,
+      },
+      twitter: { images },
       alternates: {
-        canonical: `/${params.locale}/lot/${params.slug}`
-      }
+        canonical: `/${params.locale}/lot/${params.slug}`,
+        languages: Object.fromEntries(locales.map((l) => [l, `/${l}/lot/${params.slug}`])),
+      },
     };
   } catch {
     return {};
@@ -95,8 +105,30 @@ export default async function LotDetail({ params }: { params: { locale: Locale; 
     console.error('[LotDetail] Similar DB error:', err);
   }
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Vehicle',
+    name: title,
+    brand: { '@type': 'Brand', name: v.make },
+    model: v.model,
+    modelDate: String(v.year),
+    ...(v.vin ? { vehicleIdentificationNumber: v.vin } : {}),
+    ...(v.engineVolumeL ? { engineDisplacement: { '@type': 'QuantitativeValue', value: v.engineVolumeL, unitCode: 'LTR' } } : {}),
+    ...(gallery[0] ? { image: gallery[0] } : {}),
+    ...(v.displayedPrice != null ? {
+      offers: {
+        '@type': 'Offer',
+        price: v.displayedPrice,
+        priceCurrency: v.currency || 'USD',
+        availability: 'https://schema.org/InStock',
+        seller: { '@type': 'Organization', name: 'Auto Market' },
+      },
+    } : {}),
+  };
+
   return (
     <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <H1 style={{ fontSize: 34 }}>{title}</H1>
       <div style={{ height: 14 }} />
 

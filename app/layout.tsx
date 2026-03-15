@@ -9,7 +9,14 @@ export const metadata: Metadata = {
     default: 'Auto Market',
     template: '%s · Auto Market'
   },
-  description: 'Auto market catalog with filters, services, VIN tracking and contact forms.'
+  description: 'Auto market catalog with filters, services, VIN tracking and contact forms.',
+  openGraph: {
+    siteName: 'Auto Market',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

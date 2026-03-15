@@ -1,9 +1,22 @@
 export const runtime = 'edge';
 
 import { getTranslations, unstable_setRequestLocale } from 'next-intl/server';
-import type { Locale } from '../../lib/i18n/routing';
+import type { Metadata } from 'next';
+import { locales, type Locale } from '../../lib/i18n/routing';
 import { listVehicles } from '../../lib/server/vehicles';
 import HomePageContent from '../../components/HomePageContent';
+
+export async function generateMetadata({ params }: { params: { locale: Locale } }): Promise<Metadata> {
+  const t = await getTranslations({ locale: params.locale, namespace: 'home' });
+  return {
+    title: t('title'),
+    description: t('subtitle'),
+    alternates: {
+      canonical: `/${params.locale}`,
+      languages: Object.fromEntries(locales.map((l) => [l, `/${l}`])),
+    },
+  };
+}
 
 export default async function HomePage({ params }: { params: { locale: Locale } }) {
   unstable_setRequestLocale(params.locale);
@@ -79,12 +92,36 @@ export default async function HomePage({ params }: { params: { locale: Locale } 
       JSON.stringify({ locale: params.locale, freshRows, t: tStrings })
     );
 
+    const base = (process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com').replace(/\/$/, '');
+    const jsonLd = {
+      '@context': 'https://schema.org',
+      '@graph': [
+        {
+          '@type': 'Organization',
+          '@id': `${base}/#organization`,
+          name: 'Auto Market',
+          url: base,
+          description: tStrings.subtitle,
+        },
+        {
+          '@type': 'WebSite',
+          '@id': `${base}/#website`,
+          url: base,
+          name: 'Auto Market',
+          publisher: { '@id': `${base}/#organization` },
+        },
+      ],
+    };
+
     return (
-      <HomePageContent
-        locale={payload.locale}
-        freshRows={payload.freshRows}
-        t={payload.t}
-      />
+      <>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+        <HomePageContent
+          locale={payload.locale}
+          freshRows={payload.freshRows}
+          t={payload.t}
+        />
+      </>
     );
   } catch (err) {
     console.error('[HomePage] Render error:', err);

@@ -1,6 +1,19 @@
 export const runtime = 'edge';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import type { Locale } from '../../../lib/i18n/routing';
+import type { Metadata } from 'next';
+import { locales, type Locale } from '../../../lib/i18n/routing';
+
+export async function generateMetadata({ params }: { params: { locale: Locale } }): Promise<Metadata> {
+  const t = await getTranslations({ locale: params.locale, namespace: 'services' });
+  return {
+    title: t('title'),
+    description: t('subtitle'),
+    alternates: {
+      canonical: `/${params.locale}/services`,
+      languages: Object.fromEntries(locales.map((l) => [l, `/${l}/services`])),
+    },
+  };
+}
 import Link from 'next/link';
 import { Card, CardBody, H2, P, TwoColGrid, Button } from '../../../components/ui';
 

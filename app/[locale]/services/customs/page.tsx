@@ -7,7 +7,15 @@ import type { Metadata } from 'next';
 
 export async function generateMetadata({ params }: { params: { locale: Locale } }): Promise<Metadata> {
   const t = await getTranslations({ locale: params.locale, namespace: 'services.customs' });
-  return { title: t('title') };
+  const { locales } = await import('../../../../lib/i18n/routing');
+  return {
+    title: t('title'),
+    description: t('subtitle'),
+    alternates: {
+      canonical: `/${params.locale}/services/customs`,
+      languages: Object.fromEntries(locales.map((l) => [l, `/${l}/services/customs`])),
+    },
+  };
 }
 
 function tList(t: any, prefix: string, max = 20): string[] {

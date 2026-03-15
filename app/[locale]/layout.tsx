@@ -11,9 +11,17 @@ export function generateStaticParams() {
   return locales.map((locale) => ({ locale }));
 }
 
-export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com')
-};
+const ogLocaleMap: Record<string, string> = { ge: 'ka_GE', ru: 'ru_RU', en: 'en_US' };
+
+export async function generateMetadata({ params }: { params: { locale: Locale } }): Promise<Metadata> {
+  return {
+    metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com'),
+    openGraph: {
+      locale: ogLocaleMap[params.locale],
+      alternateLocale: locales.filter((l) => l !== params.locale).map((l) => ogLocaleMap[l]),
+    },
+  };
+}
 
 export default function LocaleLayout({
   children,

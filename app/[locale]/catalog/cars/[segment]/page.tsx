@@ -1,7 +1,21 @@
 export const runtime = 'edge';
 
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import type { Locale } from '../../../../../lib/i18n/routing';
+import type { Metadata } from 'next';
+import { locales, type Locale } from '../../../../../lib/i18n/routing';
+
+export async function generateMetadata({ params }: { params: { locale: Locale; segment: string } }): Promise<Metadata> {
+  const t = await getTranslations({ locale: params.locale, namespace: 'catalog' });
+  const bodyLabel = t(`cars`) + ' · ' + params.segment;
+  return {
+    title: bodyLabel,
+    description: t('segmentSub', { segment: params.segment }),
+    alternates: {
+      canonical: `/${params.locale}/catalog/cars/${params.segment}`,
+      languages: Object.fromEntries(locales.map((l) => [l, `/${l}/catalog/cars/${params.segment}`])),
+    },
+  };
+}
 import { Suspense } from 'react';
 import { H2, P, Card, CardBody, CatalogPageGrid, CatalogCardsGrid } from '../../../../../components/ui';
 import FiltersPanel from '../../../../../components/FiltersPanel';

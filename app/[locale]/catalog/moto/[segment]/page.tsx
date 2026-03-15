@@ -1,7 +1,21 @@
 export const runtime = 'edge';
 
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import type { Locale } from '../../../../../lib/i18n/routing';
+import type { Metadata } from 'next';
+import { locales, type Locale } from '../../../../../lib/i18n/routing';
+
+export async function generateMetadata({ params }: { params: { locale: Locale; segment: string } }): Promise<Metadata> {
+  const t = await getTranslations({ locale: params.locale, namespace: 'catalog' });
+  const segmentLabel = t(`motoSegments.${params.segment}` as any) || params.segment;
+  return {
+    title: `${t('moto')} · ${segmentLabel}`,
+    description: t('motoSegmentSub', { segment: segmentLabel }),
+    alternates: {
+      canonical: `/${params.locale}/catalog/moto/${params.segment}`,
+      languages: Object.fromEntries(locales.map((l) => [l, `/${l}/catalog/moto/${params.segment}`])),
+    },
+  };
+}
 import { Suspense } from 'react';
 import { Grid, H2, P, Card, CardBody } from '../../../../../components/ui';
 import Pagination from '../../../../../components/Pagination';

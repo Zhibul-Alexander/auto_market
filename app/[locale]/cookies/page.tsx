@@ -1,6 +1,18 @@
 export const runtime = 'edge';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import type { Locale } from '../../../lib/i18n/routing';
+import type { Metadata } from 'next';
+import { locales, type Locale } from '../../../lib/i18n/routing';
+
+export async function generateMetadata({ params }: { params: { locale: Locale } }): Promise<Metadata> {
+  const t = await getTranslations({ locale: params.locale, namespace: 'cookies' });
+  return {
+    title: t('title'),
+    alternates: {
+      canonical: `/${params.locale}/cookies`,
+      languages: Object.fromEntries(locales.map((l) => [l, `/${l}/cookies`])),
+    },
+  };
+}
 import { H2, P, Card, CardBody, Hr } from '../../../components/ui';
 
 function tList(t: any, prefix: string, max = 20): string[] {

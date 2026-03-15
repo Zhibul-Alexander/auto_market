@@ -1,7 +1,20 @@
 export const runtime = 'edge';
 
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import type { Locale } from '../../../../lib/i18n/routing';
+import type { Metadata } from 'next';
+import { locales, type Locale } from '../../../../lib/i18n/routing';
+
+export async function generateMetadata({ params }: { params: { locale: Locale } }): Promise<Metadata> {
+  const t = await getTranslations({ locale: params.locale, namespace: 'catalog' });
+  return {
+    title: t('water'),
+    description: t('waterDesc'),
+    alternates: {
+      canonical: `/${params.locale}/catalog/water`,
+      languages: Object.fromEntries(locales.map((l) => [l, `/${l}/catalog/water`])),
+    },
+  };
+}
 import { H2, P, Grid } from '../../../../components/ui';
 import { listVehicles } from '../../../../lib/server/vehicles';
 import LotCard from '../../../../components/LotCard';

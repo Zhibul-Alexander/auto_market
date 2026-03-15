@@ -2,7 +2,7 @@ export const runtime = 'edge';
 
 import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import type { Locale } from '../../../../lib/i18n/routing';
+import { locales, type Locale } from '../../../../lib/i18n/routing';
 import { getService } from '../../../../lib/server/services';
 import ServiceBlocks from '../../../../components/ServiceBlocks';
 import LeadForm from '../../../../components/LeadForm';
@@ -10,10 +10,19 @@ import { Grid, H2, P } from '../../../../components/ui';
 import type { Metadata } from 'next';
 
 export async function generateMetadata({ params }: { params: { locale: Locale; slug: string } }): Promise<Metadata> {
-  return {
-    title: params.slug,
-    alternates: { canonical: `/${params.locale}/services/${params.slug}` }
-  };
+  try {
+    const svc = await getService(params.slug, params.locale);
+    const title = svc?.title || params.slug;
+    return {
+      title,
+      alternates: {
+        canonical: `/${params.locale}/services/${params.slug}`,
+        languages: Object.fromEntries(locales.map((l) => [l, `/${l}/services/${params.slug}`])),
+      },
+    };
+  } catch {
+    return { title: params.slug };
+  }
 }
 
 export default async function ServiceDetail({ params }: { params: { locale: Locale; slug: string } }) {
