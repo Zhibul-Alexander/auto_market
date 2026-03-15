@@ -7,7 +7,7 @@ import { getVehicleBySlug, listSimilarVehicles } from '../../../../lib/server/ve
 import Gallery from '../../../../components/Gallery';
 import LeadForm from '../../../../components/LeadForm';
 import LotCard from '../../../../components/LotCard';
-import { Grid, H1, H2, P, Card, CardBody, Badge, Hr } from '../../../../components/ui';
+import { H1, H2, P, Card, CardBody, Badge, Hr, LotPageGrid, CardsGrid, LotSpecGrid, LotPrice } from '../../../../components/ui';
 import Link from 'next/link';
 import { Metadata } from 'next';
 
@@ -104,14 +104,14 @@ export default async function LotDetail({ params }: { params: { locale: Locale; 
 
       <div style={{ height: 16 }} />
 
-      <Grid>
-        <div style={{ gridColumn: 'span 8' }}>
+      <LotPageGrid>
+        <div>
           <Card>
             <CardBody>
-              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12, flexWrap: 'wrap', alignItems: 'flex-start' }}>
                 <div>
                   <H2>{t('lot.price')}</H2>
-                  <div style={{ fontSize: 26, fontWeight: 700, marginTop: 8, color: '#FF6B35' }}>{price}</div>
+                  <LotPrice>{price}</LotPrice>
                 </div>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'flex-start', flexWrap: 'wrap' }}>
                   {bodyLabel ? <Badge>{bodyLabel}</Badge> : null}
@@ -122,7 +122,7 @@ export default async function LotDetail({ params }: { params: { locale: Locale; 
 
               <Hr />
 
-              <SpecGrid>
+              <LotSpecGrid>
                 <Spec label={t('lot.specs.year')} value={String(v.year)} />
                 <Spec label={t('lot.specs.body')} value={bodyLabel || '—'} />
                 <Spec label={t('lot.specs.engine')} value={v.engineVolumeL ? `${v.engineVolumeL.toFixed(1)}L` : '—'} />
@@ -131,8 +131,32 @@ export default async function LotDetail({ params }: { params: { locale: Locale; 
                 <Spec label={t('lot.specs.transmission')} value={transLabel || '—'} />
                 <Spec label={t('lot.specs.color')} value={v.color || '—'} />
                 <Spec label={t('lot.specs.vin')} value={v.vin || '—'} />
-              </SpecGrid>
+              </LotSpecGrid>
 
+            </CardBody>
+          </Card>
+
+          <div style={{ height: 18 }} />
+          <H2>{t('lot.descTitle')}</H2>
+          <div style={{ height: 12 }} />
+          <Card>
+            <CardBody>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+                <P style={{ margin: 0 }}>
+                  {t('lot.descIntro', {
+                    title,
+                    odometer: v.odometerReading
+                      ? `${v.odometerReading.toLocaleString()} ${v.odometerUnit ?? ''}`
+                      : '—'
+                  })}
+                </P>
+                <P style={{ margin: 0, fontWeight: 600 }}>
+                  {t('lot.descBuy', { title })}
+                </P>
+                <P style={{ margin: 0 }}>{t('lot.descDelivery')}</P>
+                <P style={{ margin: 0 }}>{t('lot.descCarfax')}</P>
+                <P style={{ margin: 0, color: 'var(--muted)' }}>{t('lot.descAbout')}</P>
+              </div>
             </CardBody>
           </Card>
 
@@ -141,37 +165,36 @@ export default async function LotDetail({ params }: { params: { locale: Locale; 
               <div style={{ height: 18 }} />
               <H2>{t('lot.similar')}</H2>
               <div style={{ height: 12 }} />
-              <Grid>
+              <CardsGrid>
                 {similar.map((it) => (
-                  <div key={it.id} style={{ gridColumn: 'span 4' }}>
-                    <LotCard
-                      locale={params.locale}
-                      item={{
-                        slug: it.slug,
-                        year: it.year,
-                        make: it.make,
-                        model: it.model,
-                        trim: it.trim,
-                        fullModelName: it.fullModelName,
-                        thumbUrl: it.thumbUrl,
-                        bodyType: it.bodyType,
-                        engineVolumeL: it.engineVolumeL,
-                        odometerReading: it.odometerReading,
-                        odometerUnit: it.odometerUnit,
-                        driveType: it.driveType,
-                        fuelType: it.fuelType,
-                        displayedPrice: it.displayedPrice,
-                        currency: it.currency
-                      }}
-                    />
-                  </div>
+                  <LotCard
+                    key={it.id}
+                    locale={params.locale}
+                    item={{
+                      slug: it.slug,
+                      year: it.year,
+                      make: it.make,
+                      model: it.model,
+                      trim: it.trim,
+                      fullModelName: it.fullModelName,
+                      thumbUrl: it.thumbUrl,
+                      bodyType: it.bodyType,
+                      engineVolumeL: it.engineVolumeL,
+                      odometerReading: it.odometerReading,
+                      odometerUnit: it.odometerUnit,
+                      driveType: it.driveType,
+                      fuelType: it.fuelType,
+                      displayedPrice: it.displayedPrice,
+                      currency: it.currency
+                    }}
+                  />
                 ))}
-              </Grid>
+              </CardsGrid>
             </>
           )}
         </div>
 
-        <div style={{ gridColumn: 'span 4' }}>
+        <div>
           <LeadForm
             type="lot"
             locale={params.locale}
@@ -182,7 +205,8 @@ export default async function LotDetail({ params }: { params: { locale: Locale; 
           <div style={{ height: 12 }} />
           <P style={{ fontSize: 13 }}>{t('lot.leadHint')}</P>
         </div>
-      </Grid>
+      </LotPageGrid>
+
     </div>
   );
 }
@@ -191,15 +215,11 @@ function formatMoney(v: number) {
   return v.toLocaleString(undefined, { maximumFractionDigits: 0 });
 }
 
-const SpecGrid = (props: { children: React.ReactNode }) => (
-  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>{props.children}</div>
-);
-
 function Spec({ label, value }: { label: string; value: string }) {
   return (
     <div style={{ border: '1px solid var(--border)', borderRadius: 14, padding: 12, background: '#F8FAFC' }}>
       <div style={{ fontSize: 12, color: 'var(--muted)' }}>{label}</div>
-      <div style={{ fontWeight: 800, marginTop: 6, color: 'var(--text)' }}>{value}</div>
+      <div style={{ fontWeight: 800, marginTop: 6, color: 'var(--text)', wordBreak: 'break-all' }}>{value}</div>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 export const runtime = 'edge';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Locale } from '../../../lib/i18n/routing';
-import { H1, H2, P, Card, CardBody, Grid, Badge, Hr } from '../../../components/ui';
+import { H1, H2, P, Card, CardBody, Badge, StatsGrid, TwoColGrid } from '../../../components/ui';
 import type { Metadata } from 'next';
 
 export async function generateMetadata({ params }: { params: { locale: Locale } }): Promise<Metadata> {
@@ -42,36 +42,32 @@ export default async function AboutPage({ params }: { params: { locale: Locale }
       <div style={{ height: 32 }} />
       <H2>{t('about.statsTitle')}</H2>
       <div style={{ height: 16 }} />
-      <Grid>
+      <StatsGrid>
         {stats.map((s) => (
-          <div key={s.label} style={{ gridColumn: 'span 3' }}>
-            <Card>
-              <CardBody style={{ textAlign: 'center', padding: 24 }}>
-                <div style={{ fontSize: 36, fontWeight: 900, color: 'var(--accent)' }}>{s.value}</div>
-                <P style={{ marginTop: 8 }}>{s.label}</P>
-              </CardBody>
-            </Card>
-          </div>
+          <Card key={s.label}>
+            <CardBody style={{ textAlign: 'center', padding: 24 }}>
+              <div style={{ fontSize: 36, fontWeight: 900, color: 'var(--accent)' }}>{s.value}</div>
+              <P style={{ marginTop: 8 }}>{s.label}</P>
+            </CardBody>
+          </Card>
         ))}
-      </Grid>
+      </StatsGrid>
 
       <div style={{ height: 32 }} />
       <H2>{t('about.whyTitle')}</H2>
       <div style={{ height: 16 }} />
-      <Grid>
+      <TwoColGrid>
         {whyItems.map((item, i) => (
-          <div key={i} style={{ gridColumn: 'span 6' }}>
-            <Card>
-              <CardBody style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
-                <Badge style={{ flexShrink: 0, background: 'var(--accent)', color: '#FFFFFF', fontWeight: 800 }}>
-                  {i + 1}
-                </Badge>
-                <P style={{ color: 'var(--text)' }}>{item}</P>
-              </CardBody>
-            </Card>
-          </div>
+          <Card key={i}>
+            <CardBody style={{ display: 'flex', alignItems: 'flex-start', gap: 12 }}>
+              <Badge style={{ flexShrink: 0, background: 'var(--accent)', color: '#FFFFFF', fontWeight: 800 }}>
+                {i + 1}
+              </Badge>
+              <P style={{ color: 'var(--text)' }}>{item}</P>
+            </CardBody>
+          </Card>
         ))}
-      </Grid>
+      </TwoColGrid>
 
       <div style={{ height: 32 }} />
       <H2>{t('about.howTitle')}</H2>

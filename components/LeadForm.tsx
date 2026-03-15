@@ -75,6 +75,10 @@ export default function LeadForm(props: {
       setError(t('lead.errors.phone'));
       return;
     }
+    if (phone.trim().length < 5) {
+      setError(t('lead.errors.phoneTooShort'));
+      return;
+    }
     if (!consent) {
       setError(t('lead.errors.consent'));
       return;

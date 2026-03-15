@@ -19,6 +19,26 @@ type Lead = {
   createdAt: string;
 };
 
+const STATUS_STYLES: Record<string, { bg: string; border: string; color: string; label: string }> = {
+  new:         { bg: '#EFF6FF', border: '#BFDBFE', color: '#1D4ED8', label: '🔵' },
+  in_progress: { bg: '#FFFBEB', border: '#FDE68A', color: '#B45309', label: '🟡' },
+  done:        { bg: '#F0FDF4', border: '#BBF7D0', color: '#15803D', label: '🟢' },
+};
+
+function StatusBadge({ status }: { status: string }) {
+  const s = STATUS_STYLES[status] || { bg: '#F3F4F6', border: '#E5E7EB', color: '#6B7280', label: '⚪' };
+  return (
+    <span style={{
+      display: 'inline-flex', alignItems: 'center', gap: 4,
+      padding: '2px 10px', borderRadius: 20,
+      background: s.bg, border: `1px solid ${s.border}`, color: s.color,
+      fontSize: 12, fontWeight: 700
+    }}>
+      {s.label} {status}
+    </span>
+  );
+}
+
 export default function AdminLeadsPage() {
   const { t } = useAdminI18n();
   const [status, setStatus] = useState('all');
@@ -135,7 +155,8 @@ export default function AdminLeadsPage() {
                     padding: 12,
                     borderRadius: 14,
                     border: '1px solid var(--border)',
-                    background: selected?.id === l.id ? 'rgba(255,107,53,0.08)' : '#F8FAFC',
+                    background: selected?.id === l.id ? 'rgba(255,107,53,0.08)' : (STATUS_STYLES[l.status]?.bg || '#F8FAFC'),
+                  borderColor: selected?.id === l.id ? 'var(--border)' : (STATUS_STYLES[l.status]?.border || 'var(--border)'),
                     cursor: 'pointer'
                   }}
                 >
@@ -143,8 +164,9 @@ export default function AdminLeadsPage() {
                     <div style={{ fontWeight: 900 }}>{l.phone}</div>
                     <div style={{ color: 'var(--muted)', fontSize: 12 }}>{new Date(l.createdAt).toLocaleString()}</div>
                   </div>
-                  <div style={{ color: 'var(--muted)', fontSize: 12, marginTop: 4 }}>
-                    {l.type} · {l.status} · {l.locale}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginTop: 4 }}>
+                    <StatusBadge status={l.status} />
+                    <span style={{ color: 'var(--muted)', fontSize: 12 }}>{l.type} · {l.locale}</span>
                   </div>
                   {l.message ? <div style={{ marginTop: 6, color: 'var(--muted)', fontSize: 13 }}>{l.message.slice(0, 120)}</div> : null}
                 </button>
@@ -161,17 +183,17 @@ export default function AdminLeadsPage() {
               <>
                 <P><b>{t('leads.phone')}:</b> {selected.phone}</P>
                 <P><b>{t('leads.name')}:</b> {selected.name || '—'}</P>
-                <P><b>{t('leads.status')}:</b> {selected.status}</P>
-                <P><b>{t('leads.page')}:</b> {selected.pageUrl}</P>
+                <P><b>{t('leads.status')}:</b> <StatusBadge status={selected.status} /></P>
+                <P><b>{t('leads.page')}:</b> <a href={selected.pageUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', wordBreak: 'break-all' }}>{selected.pageUrl}</a></P>
                 {selected.lotId ? <P><b>LotId:</b> {selected.lotId}</P> : null}
                 {selected.serviceSlug ? <P><b>Service:</b> {selected.serviceSlug}</P> : null}
 
                 <Hr />
 
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                  <Button onClick={() => updateStatus(selected.id, 'new')}>{t('leads.new')}</Button>
-                  <Button onClick={() => updateStatus(selected.id, 'in_progress')}>{t('leads.inProgress')}</Button>
-                  <Button onClick={() => updateStatus(selected.id, 'done')}>{t('leads.done')}</Button>
+                  <Button onClick={() => updateStatus(selected.id, 'new')} style={{ background: STATUS_STYLES.new.bg, borderColor: STATUS_STYLES.new.border, color: STATUS_STYLES.new.color }}>{t('leads.new')}</Button>
+                  <Button onClick={() => updateStatus(selected.id, 'in_progress')} style={{ background: STATUS_STYLES.in_progress.bg, borderColor: STATUS_STYLES.in_progress.border, color: STATUS_STYLES.in_progress.color }}>{t('leads.inProgress')}</Button>
+                  <Button onClick={() => updateStatus(selected.id, 'done')} style={{ background: STATUS_STYLES.done.bg, borderColor: STATUS_STYLES.done.border, color: STATUS_STYLES.done.color }}>{t('leads.done')}</Button>
                   <Button onClick={() => remove(selected.id)} style={{ borderColor: '#FCA5A5', color: '#DC2626' }}>{t('leads.delete')}</Button>
                 </div>
 

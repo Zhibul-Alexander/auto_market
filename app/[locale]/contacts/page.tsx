@@ -1,7 +1,7 @@
 export const runtime = 'edge';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Locale } from '../../../lib/i18n/routing';
-import { Grid, H2, P, Card, CardBody, Badge, Hr } from '../../../components/ui';
+import { LotPageGrid, H2, P, Card, CardBody, Badge } from '../../../components/ui';
 import LeadForm from '../../../components/LeadForm';
 import OfficesList from '../../../components/OfficesList';
 
@@ -11,8 +11,8 @@ export default async function ContactsPage({ params }: { params: { locale: Local
 
   return (
     <div>
-      <Grid>
-        <div style={{ gridColumn: 'span 7' }}>
+      <LotPageGrid>
+        <div>
           <H2>{t('contacts.title')}</H2>
           <P style={{ marginTop: 8 }}>{t('contacts.subtitle')}</P>
 
@@ -33,7 +33,7 @@ export default async function ContactsPage({ params }: { params: { locale: Local
           <OfficesList title={t('contacts.offices')} />
         </div>
 
-        <div style={{ gridColumn: 'span 5' }}>
+        <div>
           <LeadForm
             type="contact"
             locale={params.locale}
@@ -41,7 +41,7 @@ export default async function ContactsPage({ params }: { params: { locale: Local
             title={t('contacts.leadTitle')}
           />
         </div>
-      </Grid>
+      </LotPageGrid>
     </div>
   );
 }

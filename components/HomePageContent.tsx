@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { H1, H2, P, Grid, Card, CardBody, Button, Hr } from './ui';
+import { H2, P, Card, CardBody, Button, Hr, CardsGrid, TwoColGrid } from './ui';
 import HomeHero from './HomeHero';
 import LotCard from './LotCard';
 import type { Locale } from '../lib/i18n/routing';
@@ -55,7 +55,6 @@ export default function HomePageContent({
         subtitle={t.subtitle}
         ctaBrowse={t.ctaBrowse}
         navServices={t.navServices}
-        priceRule={t.priceRule}
         leadTitle={t.leadTitle}
         pageUrl={`/${locale}`}
       />
@@ -65,59 +64,54 @@ export default function HomePageContent({
       <H2>{t.freshLots}</H2>
       <div style={{ height: 12 }} />
 
-      <Grid>
+      <CardsGrid>
         {freshRows.map((it) => (
-          <div key={it.id} style={{ gridColumn: 'span 4' }}>
-            <LotCard
-              locale={locale}
-              item={{
-                slug: it.slug,
-                year: it.year,
-                make: it.make,
-                model: it.model,
-                trim: it.trim,
-                fullModelName: it.fullModelName,
-                thumbUrl: it.thumbUrl,
-                bodyType: it.bodyType,
-                engineVolumeL: it.engineVolumeL,
-                odometerReading: it.odometerReading,
-                odometerUnit: it.odometerUnit,
-                driveType: it.driveType,
-                fuelType: it.fuelType,
-                displayedPrice: it.displayedPrice,
-                currency: it.currency
-              }}
-            />
-          </div>
+          <LotCard
+            key={it.id}
+            locale={locale}
+            item={{
+              slug: it.slug,
+              year: it.year,
+              make: it.make,
+              model: it.model,
+              trim: it.trim,
+              fullModelName: it.fullModelName,
+              thumbUrl: it.thumbUrl,
+              bodyType: it.bodyType,
+              engineVolumeL: it.engineVolumeL,
+              odometerReading: it.odometerReading,
+              odometerUnit: it.odometerUnit,
+              driveType: it.driveType,
+              fuelType: it.fuelType,
+              displayedPrice: it.displayedPrice,
+              currency: it.currency
+            }}
+          />
         ))}
-      </Grid>
+      </CardsGrid>
 
       <div style={{ height: 26 }} />
 
-      <Grid>
-        <div style={{ gridColumn: 'span 6' }}>
-          <Card>
-            <CardBody>
-              <H2>{t.stepsTitle}</H2>
-              <div style={{ height: 10 }} />
-              <P>{t.steps}</P>
-            </CardBody>
-          </Card>
-        </div>
-        <div style={{ gridColumn: 'span 6' }}>
-          <Card>
-            <CardBody>
-              <H2>{t.faqTitle}</H2>
-              <div style={{ height: 10 }} />
-              <P>{t.faq}</P>
-              <div style={{ height: 12 }} />
-              <Link href={`/${locale}/contacts`}>
-                <Button $variant="primary">{t.cta}</Button>
-              </Link>
-            </CardBody>
-          </Card>
-        </div>
-      </Grid>
+      <TwoColGrid>
+        <Card style={{ display: 'flex', flexDirection: 'column' }}>
+          <CardBody>
+            <H2>{t.stepsTitle}</H2>
+            <div style={{ height: 10 }} />
+            <P>{t.steps}</P>
+          </CardBody>
+        </Card>
+        <Card style={{ display: 'flex', flexDirection: 'column' }}>
+          <CardBody>
+            <H2>{t.faqTitle}</H2>
+            <div style={{ height: 10 }} />
+            <P>{t.faq}</P>
+            <div style={{ height: 12 }} />
+            <Link href={`/${locale}/contacts`}>
+              <Button $variant="primary">{t.cta}</Button>
+            </Link>
+          </CardBody>
+        </Card>
+      </TwoColGrid>
     </div>
   );
 }

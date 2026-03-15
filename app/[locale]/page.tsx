@@ -90,8 +90,8 @@ export default async function HomePage({ params }: { params: { locale: Locale } 
     console.error('[HomePage] Render error:', err);
     return (
       <div style={{ padding: 40 }}>
-        <h1>Ошибка загрузки страницы</h1>
-        <p>Попробуйте обновить страницу.</p>
+        <h1>Page load error</h1>
+        <p>Please try refreshing the page.</p>
       </div>
     );
   }

@@ -32,6 +32,10 @@ export const H1 = styled.h1`
   font-size: 38px;
   line-height: 1.1;
   color: var(--text);
+
+  @media (max-width: 600px) {
+    font-size: 26px;
+  }
 `;
 
 export const H2 = styled.h2`
@@ -39,6 +43,10 @@ export const H2 = styled.h2`
   font-size: 24px;
   line-height: 1.2;
   color: var(--text);
+
+  @media (max-width: 600px) {
+    font-size: 20px;
+  }
 `;
 
 export const P = styled.p`
@@ -116,4 +124,105 @@ export const Hr = styled.hr`
   border: none;
   border-top: 1px solid var(--border);
   margin: 16px 0;
+`;
+
+/* ── Responsive layout helpers ── */
+
+/** Catalog page: filters sidebar + main listing */
+export const CatalogPageGrid = styled.div`
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 16px;
+  align-items: start;
+
+  @media (max-width: 860px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+/** Lot detail page: main content + lead form sidebar */
+export const LotPageGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 20px;
+  align-items: start;
+
+  @media (max-width: 860px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+/** Car cards grid: 3 columns → 2 → 1 */
+export const CardsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+
+  @media (max-width: 900px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 540px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+/** Catalog listing grid (inside sidebar layout): 2 columns → 1 */
+export const CatalogCardsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+/** Two equal columns → 1 (steps/FAQ blocks, etc.) */
+export const TwoColGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+
+  @media (max-width: 720px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+/** Lot spec grid: 2 cols → 1 on small mobile */
+export const LotSpecGrid = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+/** Stats grid: 4 cols → 2 → 1 */
+export const StatsGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+
+  @media (max-width: 720px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 400px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+/** Lot price value */
+export const LotPrice = styled.div`
+  font-size: 26px;
+  font-weight: 700;
+  margin-top: 8px;
+  color: #FF6B35;
+
+  @media (max-width: 480px) {
+    font-size: 22px;
+  }
 `;

@@ -2,7 +2,7 @@ export const runtime = 'edge';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Locale } from '../../../lib/i18n/routing';
 import Link from 'next/link';
-import { Card, CardBody, H2, P, Grid, Button } from '../../../components/ui';
+import { Card, CardBody, H2, P, TwoColGrid, Button } from '../../../components/ui';
 
 export default async function ServicesPage({ params }: { params: { locale: Locale } }) {
   setRequestLocale(params.locale);
@@ -29,22 +29,20 @@ export default async function ServicesPage({ params }: { params: { locale: Local
       <P style={{ marginTop: 8 }}>{t('services.subtitle')}</P>
       <div style={{ height: 12 }} />
 
-      <Grid>
+      <TwoColGrid>
         {services.map((s) => (
-          <div key={s.slug} style={{ gridColumn: 'span 6' }}>
-            <Link href={s.href}>
-              <Card>
-                <CardBody>
-                  <H2>{s.title}</H2>
-                  <P style={{ marginTop: 10 }}>{s.subtitle}</P>
-                  <div style={{ height: 14 }} />
-                  <Button $variant="primary">{t('services.open')}</Button>
-                </CardBody>
-              </Card>
-            </Link>
-          </div>
+          <Link key={s.slug} href={s.href}>
+            <Card>
+              <CardBody>
+                <H2>{s.title}</H2>
+                <P style={{ marginTop: 10 }}>{s.subtitle}</P>
+                <div style={{ height: 14 }} />
+                <Button $variant="primary">{t('services.open')}</Button>
+              </CardBody>
+            </Card>
+          </Link>
         ))}
-      </Grid>
+      </TwoColGrid>
     </div>
   );
 }

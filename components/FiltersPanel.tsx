@@ -97,6 +97,11 @@ const Body = styled.div<{ $open: boolean }>`
   &::-webkit-scrollbar { width: 4px; }
   &::-webkit-scrollbar-track { background: transparent; }
   &::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; }
+
+  @media (max-width: 860px) {
+    max-height: none;
+    overflow-y: visible;
+  }
 `;
 
 const Divider = styled.hr`
@@ -144,6 +149,11 @@ const Chip = styled.button<{ $active?: boolean }>`
   font-weight: ${(p) => (p.$active ? 700 : 400)};
   transition: all 100ms ease;
   white-space: nowrap;
+
+  @media (max-width: 860px) {
+    padding: 8px 12px;
+    font-size: 13px;
+  }
 `;
 
 const SortChips = styled.div`
@@ -229,6 +239,11 @@ const DropdownItem = styled.button<{ $active?: boolean }>`
   align-items: center;
   gap: 6px;
   &:hover { background: #F1F5F9; }
+
+  @media (max-width: 860px) {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
 `;
 
 const DropdownBtnLabel = styled.span`
@@ -314,6 +329,13 @@ export default function FiltersPanel({ total }: { total?: number }) {
 
   const [open, setOpen] = useState(true);
   const [makeOpen, setMakeOpen] = useState(false);
+
+  // Collapse by default on mobile
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.innerWidth <= 860) {
+      setOpen(false);
+    }
+  }, []);
   const makeDropRef = useRef<HTMLDivElement>(null);
 
   const [filters, setFilters] = useState<FilterState>(() => ({

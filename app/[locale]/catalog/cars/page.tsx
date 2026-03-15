@@ -3,7 +3,7 @@ export const runtime = 'edge';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import type { Locale } from '../../../../lib/i18n/routing';
 import { Suspense } from 'react';
-import { Grid, H2, P, Card, CardBody } from '../../../../components/ui';
+import { H2, P, Card, CardBody, CatalogPageGrid, CatalogCardsGrid } from '../../../../components/ui';
 import FiltersPanel from '../../../../components/FiltersPanel';
 import Pagination from '../../../../components/Pagination';
 import LotCard from '../../../../components/LotCard';
@@ -41,7 +41,7 @@ export default async function CarsListing({
   const page = Math.max(1, asNum(searchParams.page) ?? 1);
   const pageSize = 50;
 
-  const sort = (asStr(searchParams.sort) as any) || 'newest';
+  const sort = (asStr(searchParams.sort) as any) || 'price_asc';
 
   let data: { total: number; rows: any[]; page: number; pageSize: number } = { total: 0, rows: [], page, pageSize };
   try {
@@ -76,11 +76,11 @@ export default async function CarsListing({
       <P style={{ marginTop: 8 }}>{t('catalog.carsSub')}</P>
       <div style={{ height: 16 }} />
 
-      <Grid>
-        <div style={{ gridColumn: 'span 4' }}>
+      <CatalogPageGrid>
+        <div>
           <Suspense fallback={null}><FiltersPanel total={data.total} /></Suspense>
         </div>
-        <div style={{ gridColumn: 'span 8' }}>
+        <div>
           {data.total === 0 && (
             <Card>
               <CardBody>
@@ -88,38 +88,37 @@ export default async function CarsListing({
               </CardBody>
             </Card>
           )}
-          <Grid>
+          <CatalogCardsGrid>
             {data.rows.map((it) => (
-              <div key={it.id} style={{ gridColumn: 'span 6' }}>
-                <LotCard
-                  locale={params.locale}
-                  item={{
-                    slug: it.slug,
-                    year: it.year,
-                    make: it.make,
-                    model: it.model,
-                    trim: it.trim,
-                    fullModelName: it.fullModelName,
-                    thumbUrl: it.thumbUrl,
-                    bodyType: it.bodyType,
-                    engineVolumeL: it.engineVolumeL,
-                    odometerReading: it.odometerReading,
-                    odometerUnit: it.odometerUnit,
-                    driveType: it.driveType,
-                    fuelType: it.fuelType,
-                    displayedPrice: it.displayedPrice,
-                    buyItNow: it.buyItNow,
-                    estRetail: it.estRetail,
-                    currency: it.currency
-                  }}
-                />
-              </div>
+              <LotCard
+                key={it.id}
+                locale={params.locale}
+                item={{
+                  slug: it.slug,
+                  year: it.year,
+                  make: it.make,
+                  model: it.model,
+                  trim: it.trim,
+                  fullModelName: it.fullModelName,
+                  thumbUrl: it.thumbUrl,
+                  bodyType: it.bodyType,
+                  engineVolumeL: it.engineVolumeL,
+                  odometerReading: it.odometerReading,
+                  odometerUnit: it.odometerUnit,
+                  driveType: it.driveType,
+                  fuelType: it.fuelType,
+                  displayedPrice: it.displayedPrice,
+                  buyItNow: it.buyItNow,
+                  estRetail: it.estRetail,
+                  currency: it.currency
+                }}
+              />
             ))}
-          </Grid>
+          </CatalogCardsGrid>
 
           <Suspense fallback={null}><Pagination total={data.total} page={data.page} pageSize={data.pageSize} /></Suspense>
         </div>
-      </Grid>
+      </CatalogPageGrid>
     </div>
   );
 }

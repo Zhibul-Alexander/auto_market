@@ -66,7 +66,7 @@
     "about": "About"
   },
   "footer": {
-    "tagline": "Clean catalog, transparent price rules, lead forms and VIN tracking.",
+    "tagline": "Fresh US auction lots, transparent pricing, and real-time VIN tracking.",
     "links": "Sections",
     "legal": "Legal",
     "privacy": "Privacy policy",
@@ -75,7 +75,7 @@
   },
   "home": {
     "title": "Buy smart. Import confidently.",
-    "subtitle": "Fresh auction lots in a tidy catalog. Filter, compare, leave a request — we’ll help with logistics and paperwork.",
+    "subtitle": "Browse fresh lots from US auctions. Filter by make, price, and year — then leave a request and we’ll handle delivery and paperwork.",
     "ctaBrowse": "Browse cars",
     "priceRule": "Price is shown as Buy It Now. If it's missing — we show 50% of Estimated Retail Value. If both are missing — “Price on request”.",
     "leadTitle": "Request a quote",
@@ -83,7 +83,7 @@
     "stepsTitle": "How it works",
     "steps": "1) Find a lot → 2) Send a request → 3) We confirm costs, timing and docs → 4) Delivery & handover.",
     "faqTitle": "FAQ",
-    "faq": "Need help choosing a lot or understanding the price? Write us — we’ll reply quickly."
+    "faq": "Have questions about a lot or its price? Write to us — we respond quickly in Georgian, Russian, and English."
   },
   "catalog": {
     "hubTitle": "Catalog",
@@ -125,7 +125,13 @@
     "sourceLink": "Open source listing",
     "similar": "Similar lots",
     "leadTitle": "I want this lot",
-    "leadHint": "Leave your phone — we’ll contact you and confirm availability and full costs."
+    "leadHint": "Leave your phone — we’ll contact you and confirm availability and full costs.",
+    "descTitle": "Vehicle description",
+    "descIntro": "{title}, odometer {odometer}. Currently listed at a US auction.",
+    "descBuy": "Buy {title} directly from an American auction platform — no markups, no middlemen!",
+    "descDelivery": "Fast delivery from the USA and Canada to Georgia!",
+    "descCarfax": "Every client gets a full vehicle history check via CARFAX and AutoCheck.",
+    "descAbout": "Auto Market provides end-to-end service: vehicle sourcing, verification, and purchasing at all major US auctions; shipping from America to Georgia; full support with customs clearance and registration in any Georgian city."
   },
   "lead": {
     "placeholders": {
@@ -135,6 +141,7 @@
     },
     "errors": {
       "phone": "Enter your phone number",
+      "phoneTooShort": "Phone number is too short",
       "consent": "Please accept consent to be contacted"
     },
     "success": "Thanks! We’ll contact you soon.",
@@ -142,11 +149,11 @@
   },
   "services": {
     "title": "Services",
-    "subtitle": "Everything around the lot: delivery, customs clearance, checks and handover.",
+    "subtitle": "Full-cycle support: delivery from US auctions, customs clearance, and vehicle handover in Georgia.",
     "open": "Learn more",
     "openHint": "Details, steps and FAQ",
     "ctaTitle": "Need this service?",
-    "ctaText": "Leave a request — we’ll уточним сроки, стоимость и список документов.",
+    "ctaText": "Leave a request — we’ll clarify timelines, cost and required documents.",
     "leadTitle": "Request this service",
     "customs": {
       "title": "Car Customs Clearance from USA in Georgia",
@@ -231,7 +238,7 @@
   },
   "tracking": {
     "title": "VIN tracking",
-    "subtitle": "Enter VIN to see logistics checkpoints and status updates (if tracking is available).",
+    "subtitle": "Enter a VIN to see real-time logistics checkpoints and status updates.",
     "search": "Search",
     "loading": "Searching…",
     "notFound": "No tracking events found for this VIN.",
@@ -239,7 +246,7 @@
   },
   "contacts": {
     "title": "Contacts",
-    "subtitle": "Send a request and we will respond. You can also ask about a specific lot number.",
+    "subtitle": "Send a request and we'll get back to you quickly. Feel free to mention a specific lot number or model.",
     "leadTitle": "Write to us",
     "city": "Tbilisi (GE)",
     "hours": "Daily",
@@ -249,8 +256,8 @@
   },
   "about": {
     "title": "About",
-    "subtitle": "Auto Market — your reliable partner for importing vehicles from the USA to Georgia.",
-    "intro": "We help clients purchase vehicles from American auctions at the best prices. Our team handles the entire process: from vehicle selection to delivery and customs clearance.",
+    "subtitle": "Auto Market — trusted vehicle importer with 10+ years of experience and offices across Georgia.",
+    "intro": "We help clients buy vehicles directly from US auctions at the best prices. Our team handles everything — from finding the right car to delivery and customs clearance in Georgia.",
     "statsTitle": "Our company in numbers",
     "stats": {
       "vehicles": "Vehicles delivered",
@@ -281,14 +288,89 @@
     ]
   },
   "privacy": {
-    "title": "Privacy policy",
-    "body1": "We collect only the data you submit in forms (name, phone, message) to respond to your request.",
-    "body2": "We don’t sell personal data. Access is limited to people who process requests.",
-    "body3": "You can ask to delete your request data by contacting us."
+    "title": "Privacy Policy",
+    "lastUpdated": "Last updated: March 2026",
+    "s1Title": "1. General",
+    "s1Body": "Auto Market (‘we’, ‘us’, ‘company’) is the data controller for personal data collected on this website. This Privacy Policy explains what data we collect, how we use and protect it, and your rights as a data subject. By using the site and submitting enquiries, you agree to the terms of this Policy.",
+    "s2Title": "2. Data we collect",
+    "s2Body": "We collect only data that you voluntarily provide when completing forms on the site:",
+    "s2Items": [
+      "Name (optional field)",
+      "Phone number",
+      "Message or enquiry text",
+      "Lot number or VIN (if included in your enquiry)",
+      "Technical data: IP address and browser type — for security and abuse-prevention purposes only"
+    ],
+    "s3Title": "3. Legal basis for processing",
+    "s3Body": "We process your personal data on the following legal grounds:",
+    "s3Items": [
+      "Consent — you explicitly tick the consent checkbox before submitting a form",
+      "Performance of a contract or pre-contractual steps — to process your enquiry and prepare a quote",
+      "Legitimate interests — protecting against abuse and ensuring the security of the website"
+    ],
+    "s4Title": "4. How we use your data",
+    "s4Body": "Your data is used exclusively for the following purposes:",
+    "s4Items": [
+      "Responding to your enquiry by phone or messenger",
+      "Calculating the cost of the vehicle, logistics, and customs fees",
+      "Confirming lot availability and arranging the transaction",
+      "Internal enquiry tracking in the company’s CRM system"
+    ],
+    "s5Title": "5. Data storage and security",
+    "s5Body": "Your data is stored on secure servers with restricted access. Only staff directly involved in processing enquiries have access to your data. We apply technical and organisational security measures including encrypted connections (HTTPS/TLS), access controls, and regular security audits. Data is retained no longer than necessary to fulfil the stated purposes — generally no more than 3 years from the date of last contact.",
+    "s6Title": "6. Sharing with third parties",
+    "s6Body": "We do not sell or share your personal data with third parties for commercial purposes. Limited access may be granted only to:",
+    "s6Items": [
+      "Technical service providers (hosting, CRM, email services) — solely to support service delivery, bound by confidentiality obligations",
+      "Government authorities — only upon a lawful request under applicable legislation"
+    ],
+    "s7Title": "7. Your rights",
+    "s7Body": "Under applicable data protection law, you have the right to:",
+    "s7Items": [
+      "Obtain confirmation that your data is being processed and receive a copy (right of access)",
+      "Correct inaccurate or outdated data (right to rectification)",
+      "Request deletion of your data (right to erasure / right to be forgotten)",
+      "Restrict or object to the processing of your data",
+      "Withdraw consent at any time without affecting the lawfulness of processing prior to withdrawal",
+      "Lodge a complaint with a supervisory authority"
+    ],
+    "s8Title": "8. Cookies",
+    "s8Body": "Our website uses cookies. Full information about the types of cookies we use, their purposes, and how to manage them is set out in our Cookie Policy, available in the site footer.",
+    "s9Title": "9. Changes to this Policy",
+    "s9Body": "We reserve the right to update this Privacy Policy. The current version is always available on this page. For material changes we will post a notice on the site. Continued use of the site after changes are published constitutes acceptance of the updated Policy.",
+    "s10Title": "10. Contact",
+    "s10Body": "For any questions related to the processing of your personal data — including requests to access, correct, or delete your data — please contact us via the Contacts section of our website. We will respond to your request within a reasonable timeframe in accordance with applicable law."
   },
   "cookies": {
-    "title": "Cookies",
-    "body1": "We use essential cookies for the site and admin authentication.",
-    "body2": "You can disable cookies in your browser settings, but some features may stop working."
+    "title": "Cookie Policy",
+    "lastUpdated": "Last updated: March 2026",
+    "s1Title": "1. What are cookies?",
+    "s1Body": "Cookies are small text files that a website stores in your browser when you visit. They allow the site to function correctly, remember your settings, and maintain security. Cookies do not contain personal data and cannot execute code.",
+    "s2Title": "2. Cookies we use",
+    "s2Body": "We use only technically necessary cookies. We do not use analytics, advertising, or marketing cookies without your explicit consent. The site uses the following categories of cookies:",
+    "s2Items": [
+      "Session cookies — ensure correct navigation and form functionality. Automatically deleted when you close your browser.",
+      "Authentication cookies — used exclusively in the admin panel when an administrator signs in. Not set for regular users.",
+      "Security cookies (CSRF tokens) — protect contact forms against cross-site request forgery attacks."
+    ],
+    "s3Title": "3. Specific cookies",
+    "s3Body": "The following cookies may be set on this site:",
+    "s3Items": [
+      "next-auth.session-token — admin authentication; session cookie; HttpOnly, Secure flags; not accessible via JavaScript",
+      "__Host-next-auth.csrf-token — CSRF attack prevention; session cookie; HttpOnly, Secure flags",
+      "NEXT_LOCALE — stores your preferred interface language; 1-year expiry; Secure"
+    ],
+    "s4Title": "4. Third-party cookies",
+    "s4Body": "Our site does not integrate third-party analytics services (Google Analytics, etc.) and does not place advertising trackers. If we introduce third-party services that require cookies in the future, we will update this policy and request your explicit consent in accordance with applicable law.",
+    "s5Title": "5. Managing cookies",
+    "s5Body": "You can manage cookies and withdraw consent at any time through your browser settings:",
+    "s5Items": [
+      "Google Chrome: Settings → Privacy and security → Cookies and other site data",
+      "Mozilla Firefox: Settings → Privacy & Security → Cookies and Site Data",
+      "Safari: Preferences → Privacy → Manage Website Data",
+      "Microsoft Edge: Settings → Privacy, search and services → Cookies and site permissions"
+    ],
+    "s6Title": "6. Changes to this Policy",
+    "s6Body": "We may update this Cookie Policy as technologies or legal requirements change. The current version is always available on this page. The date of the last update is shown at the top of the page."
   }
 }

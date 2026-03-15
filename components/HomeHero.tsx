@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import styled from 'styled-components';
-import { H1, P, Button, Hr } from './ui';
+import { H1, P, Button } from './ui';
 import LeadForm from './LeadForm';
 import type { Locale } from '../lib/i18n/routing';
 
@@ -27,13 +27,19 @@ const Panel = styled.div`
   box-shadow: 0 15px 40px rgba(0,0,0,0.06);
 `;
 
+const PanelButtons = styled.div`
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+`;
+
 export default function HomeHero({
   locale,
   title,
   subtitle,
   ctaBrowse,
   navServices,
-  priceRule,
   leadTitle,
   pageUrl
 }: {
@@ -42,7 +48,6 @@ export default function HomeHero({
   subtitle: string;
   ctaBrowse: string;
   navServices: string;
-  priceRule: string;
   leadTitle: string;
   pageUrl: string;
 }) {
@@ -51,18 +56,14 @@ export default function HomeHero({
       <Panel>
         <H1>{title}</H1>
         <P style={{ marginTop: 12 }}>{subtitle}</P>
-        <div style={{ height: 16 }} />
-        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+        <PanelButtons>
           <Link href={`/${locale}/catalog/cars`}>
             <Button $variant="primary">{ctaBrowse}</Button>
           </Link>
           <Link href={`/${locale}/services`}>
             <Button>{navServices}</Button>
           </Link>
-        </div>
-        <div style={{ height: 16 }} />
-        <Hr />
-        <P style={{ fontSize: 13 }}>{priceRule}</P>
+        </PanelButtons>
       </Panel>
       <LeadForm type="general" locale={locale} pageUrl={pageUrl} title={leadTitle} />
     </Hero>
