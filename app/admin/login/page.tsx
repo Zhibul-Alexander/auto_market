@@ -1,6 +1,6 @@
 'use client';
 
-import { useSearchParams, useRouter } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
 import styled from 'styled-components';
 import { Button, Card, CardBody, Input, H2, P, Container } from '../../../components/ui';
@@ -23,7 +23,6 @@ export default function AdminLoginPage() {
 function AdminLoginForm() {
   const { t } = useAdminI18n();
   const sp = useSearchParams();
-  const router = useRouter();
   const next = sp?.get('next') || '/admin/import';
 
   const [password, setPassword] = useState('');
@@ -42,7 +41,7 @@ function AdminLoginForm() {
       });
       const data = await res.json().catch(() => ({} as { error?: string })) as { error?: string };
       if (!res.ok) throw new Error(data?.error || 'Login failed');
-      router.push(next);
+      window.location.href = next;
     } catch (err: any) {
       setError(err?.message || 'Login failed');
     } finally {

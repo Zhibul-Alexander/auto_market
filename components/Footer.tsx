@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import styled from 'styled-components';
 import { useTranslations } from 'next-intl';
-import { Container, Hr } from './ui';
+import { Container } from './ui';
 import type { Locale } from '../lib/i18n/routing';
 
 const Wrap = styled.footer`
@@ -14,12 +14,38 @@ const Wrap = styled.footer`
 
 const Row = styled.div`
   display: grid;
-  grid-template-columns: 1.3fr 1fr 1fr;
+  grid-template-columns: 1.3fr 1fr;
   gap: 16px;
 
   @media (max-width: 860px) {
     grid-template-columns: 1fr;
   }
+`;
+
+const BottomBar = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 20px;
+  margin-top: 20px;
+  border-top: 1px solid var(--border);
+
+  @media (max-width: 600px) {
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+`;
+
+const BottomLinks = styled.div`
+  display: flex;
+  gap: 16px;
+
+  a {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  a:hover { color: var(--text); }
 `;
 
 const Small = styled.p`
@@ -140,8 +166,6 @@ export default function Footer({ locale }: { locale: Locale }) {
               <a href="https://youtube.com/" target="_blank" rel="noopener noreferrer" aria-label="YouTube"><YouTubeIcon /></a>
               <a href="tel:+995551532661" className="phone" aria-label="Phone">+995 551 532 661</a>
             </SocialRow>
-            <Hr />
-            <Small>© {new Date().getFullYear()} {t('common.brand')}</Small>
           </div>
 
           <div>
@@ -155,14 +179,14 @@ export default function Footer({ locale }: { locale: Locale }) {
             </Links>
           </div>
 
-          <div>
-            <ColTitle>{t('footer.legal')}</ColTitle>
-            <Links>
-              <Link href={`/${locale}/privacy`}>{t('footer.privacy')}</Link>
-              <Link href={`/${locale}/cookies`}>{t('footer.cookies')}</Link>
-            </Links>
-          </div>
         </Row>
+        <BottomBar>
+          <Small>© 2026 {t('common.brand')}</Small>
+          <BottomLinks>
+            <Link href={`/${locale}/privacy`}>{t('footer.privacy')}</Link>
+            <Link href={`/${locale}/cookies`}>{t('footer.cookies')}</Link>
+          </BottomLinks>
+        </BottomBar>
       </Container>
     </Wrap>
   );

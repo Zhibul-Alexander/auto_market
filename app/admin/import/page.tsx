@@ -70,9 +70,18 @@ export default function AdminImportPage() {
         <CardBody>
           <input type="file" accept=".json,application/json" onChange={(e) => setFile(e.target.files?.[0] || null)} />
           <div style={{ height: 12 }} />
-          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
             <Button $variant="primary" disabled={!file || loading} onClick={doPreview}>{t('import.preview')}</Button>
             <Button disabled={!file || loading} onClick={doImport}>{t('import.import')}</Button>
+            {loading && (
+              <>
+                <style>{`@keyframes _spin { to { transform: rotate(360deg); } }`}</style>
+                <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6, color: 'var(--muted)', fontSize: 14 }}>
+                  <span style={{ width: 14, height: 14, border: '2px solid var(--border)', borderTopColor: '#FF6B35', borderRadius: '50%', display: 'inline-block', animation: '_spin 0.7s linear infinite', flexShrink: 0 }} />
+                  {t('import.loading')}
+                </span>
+              </>
+            )}
           </div>
           <P style={{ marginTop: 10, fontSize: 13, color: 'var(--muted)' }}>
             {t('import.tip')}
