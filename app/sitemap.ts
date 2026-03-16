@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next';
 import { locales } from '../lib/i18n/routing';
 import { getDb } from '../db/client';
 import { servicePage, vehicle } from '../db/schema';
-import { asc, count } from 'drizzle-orm';
+import { asc } from 'drizzle-orm';
 
 export const runtime = 'edge';
 
@@ -43,15 +43,13 @@ function alternates(path: string, base: string) {
   return Object.fromEntries(locales.map((l) => [l, `${base}/${l}${path}`]));
 }
 
-export async function generateSitemaps() {
-  const db = getDb();
-  const [{ total }] = await db.select({ total: count() }).from(vehicle);
-  const lotPages = Math.ceil(total / LOTS_PER_SITEMAP) || 1;
+const MAX_LOT_SITEMAPS = 10; // covers up to 10 000 vehicles
 
+export function generateSitemaps() {
   return [
     { id: 'static' },
     { id: 'services' },
-    ...Array.from({ length: lotPages }, (_, i) => ({ id: `lots-${i}` })),
+    ...Array.from({ length: MAX_LOT_SITEMAPS }, (_, i) => ({ id: `lots-${i}` })),
   ];
 }
 
