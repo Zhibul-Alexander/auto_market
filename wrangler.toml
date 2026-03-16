@@ -4,5 +4,5 @@ compatibility_flags = ["nodejs_compat"]
 
 [[d1_databases]]
 binding = "DB"
-database_name = "auto_market"
-database_id = "local-dev"
+database_name = "auto-market-db"
+database_id = "d648de58-32e5-43b9-bed0-7d24e981a1cd"
